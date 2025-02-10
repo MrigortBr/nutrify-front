@@ -22,16 +22,6 @@ const exitToLeft = keyframes`
   to { left: 35vw;}
 `;
 
-const enterFromLeftMobile = keyframes`
-
-  from { left: 35vw; }
-  to { left: 5vw; }
-`;
-const exitToLeftMobile = keyframes`
-  from { left: 5vw; }
-  to { left: 10vw;}
-`;
-
 const enterFromRight = keyframes`
   from { left: 65vw; }
   to { left: 35vw; }
@@ -41,9 +31,18 @@ const exitToRight = keyframes`
   to { left: 65vw; }
 `;
 
+const enterFromLeftMobile = keyframes`
+  from { left: 10vw; }
+  to { left: 5vw; }
+`;
+const exitToLeftMobile = keyframes`
+  from { left: 5vw; }
+  to { left: 10vw;}
+`;
+
 const enterFromRightMobile = keyframes`
-  from { left: 35vw; }
-  to { left: 10vw; }
+  from { left: 10vw; }
+  to { left: 5vw; }
 `;
 const exitToRightMobile = keyframes`
   from { left: 5vw; }

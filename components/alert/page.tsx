@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import ReactDOM from "react-dom/client";
 import { motion, AnimatePresence } from "framer-motion";
 import { Alert } from "@mui/material";
@@ -20,40 +20,41 @@ export function showAlert(message: string, severity: "success" | "error" | "info
 
   function AlertComponent() {
     const [visible, setVisible] = useState(true);
-    let remainingTime: number = 3000;
-    let stopTime = false;
-    let destroy = false;
+    const remainingTime = useRef(3000);
+    const destroy = useRef(false);
+    const stopTime = useRef(false);
 
     function enterMouse() {
-      stopTime = true;
+      stopTime.current = true;
     }
 
     function leaveMouse() {
-      stopTime = true;
+      stopTime.current = false;
     }
 
     function destroyAlert() {
-      destroy = true;
+      destroy.current = true;
     }
 
     useEffect(() => {
       const interval = setInterval(() => {
-        if (remainingTime <= 500) {
+        if (remainingTime.current <= 500) {
           setVisible(false);
-          if (remainingTime == 0) {
+          if (remainingTime.current <= 0) {
             root.unmount();
             alertContainer?.removeChild(alertNode);
             clearInterval(interval);
           }
         }
 
-        if (destroy) {
-          remainingTime = 500;
-          destroy = true;
+        if (destroy.current) {
+          remainingTime.current = 500;
         }
 
-        if (!stopTime) remainingTime = remainingTime - 10;
+        if (!stopTime.current) remainingTime.current -= 10;
       }, 10);
+
+      return () => clearInterval(interval);
     }, []);
 
     return (

@@ -9,7 +9,7 @@ type Props = {
 
 export default function FormButton(props: Props) {
   return (
-    <LoginButton sending={props.sending} onClick={props.function}>
+    <LoginButton $sending={props.sending} onClick={props.function}>
       {props.sending == "sending" ? <CircularProgress size={"2rem"} sx={{ color: "rgb(89, 199, 21)" }} /> : props.children}
     </LoginButton>
   );

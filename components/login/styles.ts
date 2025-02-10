@@ -26,7 +26,7 @@ export const Logo = styled.img`
   }
 `;
 
-export const DivLogin = styled.div<{ go?: "left" | "right" | "center" }>`
+export const DivLogin = styled.div<{ $go: "left" | "right" | "center" }>`
   width: 30vw;
   height: 80vh;
   background-color: #ffff;
@@ -47,8 +47,8 @@ export const DivLogin = styled.div<{ go?: "left" | "right" | "center" }>`
     left: 10vw;
 
     transition: 300ms;
-    ${({ go }) => go === "left" && "left: -70vw;"};
-    ${({ go }) => go === "right" && "left: 85vw;"};
+    ${({ $go }) => $go === "left" && "left: -70vw;"};
+    ${({ $go }) => $go === "right" && "left: 85vw;"};
   }
 `;
 
@@ -124,7 +124,7 @@ export const ForgotPassword = styled.p`
   }
 `;
 
-export const LoginButton = styled.button<{ sending: "sending" | "free" }>`
+export const LoginButton = styled.button<{ $sending: "sending" | "free" }>`
   background-color: #05ba64;
   font-size: calc(var(--px) * 24);
   border-radius: 20px;
@@ -141,8 +141,8 @@ export const LoginButton = styled.button<{ sending: "sending" | "free" }>`
     font-size: calc((var(--px) * 24) * 4);
   }
 
-  ${({ sending }) =>
-    sending === "sending"
+  ${({ $sending }) =>
+    $sending === "sending"
       ? `
       transition: 500ms;
       min-width: 21%;
@@ -158,9 +158,6 @@ export const LoginButton = styled.button<{ sending: "sending" | "free" }>`
           transform: scaleX(1.05);
         }
       `}
-
-  &[sending="sending"] {
-  }
 `;
 
 export const CreateAccount = styled.p`

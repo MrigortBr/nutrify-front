@@ -1,10 +1,11 @@
 "use client";
-import { InputText, LoginButton, SpanInputText } from "@/components/login/styles";
+import { InputText, SpanInputText } from "@/components/login/styles";
 import { BackgroundModal, BackPageRight, ConfirmEmail, EmailSended, SendAnother, TitleReset } from "./styled";
 import { Dispatch, SetStateAction, useState } from "react";
 import { emailIsNullAndValid } from "@/service/validateFields";
 import { requestReset } from "@/service/requests/reset";
 import { showAlert } from "../alert/page";
+import FormButton from "../formComponents/formButton";
 
 type Prop = {
   show: boolean;
@@ -19,8 +20,9 @@ export default function Request(prop: Prop) {
 
   async function sendRequest() {
     if (!emailIsNullAndValid(email)) return;
-
+    setSending("sending");
     const result = await requestReset(email);
+    setSending("free");
 
     showAlert(result.data?.message || "", result.success ? "success" : "error");
     if (result.success) {
@@ -28,13 +30,19 @@ export default function Request(prop: Prop) {
     }
   }
 
+  function close() {
+    prop.setShow(false);
+    setTimeout(() => {
+      prop.goCenter();
+    }, 300);
+  }
+
   return (
     <BackgroundModal closed={prop.show ? "open" : "closed"} side="left">
       <BackPageRight
         src="/icons/arrow-right.svg"
         onClick={() => {
-          prop.setShow(false);
-          prop.goCenter();
+          close();
         }}
       ></BackPageRight>
       {requestSend == false ? (
@@ -43,9 +51,10 @@ export default function Request(prop: Prop) {
           <SpanInputText style={{ height: "10vh", marginBottom: "0%" }}>
             <InputText value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email da conta"></InputText>
           </SpanInputText>
-          <LoginButton style={{ height: "10vh", marginTop: "0%" }} onClick={sendRequest} sending={sending}>
+
+          <FormButton function={sendRequest} sending={sending}>
             Enviar email
-          </LoginButton>
+          </FormButton>
         </>
       ) : (
         <>
