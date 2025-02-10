@@ -26,22 +26,31 @@ import Request from "../reset/request";
 import Reset from "../reset/reset";
 
 export default function LoginComponent() {
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [sending, setSending] = useState<"sending" | "free">("free");
   const [go, setGo] = useState<"left" | "center" | "right">("center");
   const [showReset, setShowReset] = useState<boolean>(false);
   const [showRequest, setShowRequest] = useState<boolean>(false);
+  const [isMobile, setIsMobile] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    const searchParams = useSearchParams();
-
     if (searchParams.get("token")) {
       setShowReset(true);
       setGo("left");
     }
-  }, []);
+
+    const checkMobile = () => {
+      setIsMobile(window.matchMedia("(max-width: 768px)").matches);
+    };
+
+    checkMobile(); // Verifica no carregamento
+    window.addEventListener("resize", checkMobile); // Atualiza ao redimensionar
+
+    return () => window.removeEventListener("resize", checkMobile);
+  }, [searchParams]);
 
   function goCenter() {
     setGo("center");
@@ -64,7 +73,7 @@ export default function LoginComponent() {
     <>
       <ConatinerLogin></ConatinerLogin>
       <Logo src="/png/logo.png" />
-      <DivLogin go={go}>
+      <DivLogin $go={go}>
         <TextLogin>ENTRAR</TextLogin>
         <SpanInputText>
           <InputText
@@ -90,8 +99,6 @@ export default function LoginComponent() {
         <CreateAccount onClick={() => router.push(Routes.register)}>
           Ainda não é registrado? <b>Cadastre-se</b>
         </CreateAccount>
-        {/* <LineWidget side="left" />
-        <LineWidget side="right" /> */}
         <BackgroundLine>
           <WidgetLine></WidgetLine>
           <LineText>OU</LineText>
@@ -101,10 +108,17 @@ export default function LoginComponent() {
           login com o google
         </LoginWithGoogle>
       </DivLogin>
-      <span style={{ visibility: go == "left" ? "hidden" : "visible" }}>
-        <Request show={showRequest} goCenter={goCenter} setShow={setShowRequest} />
-      </span>
-      {go == "left" ? <Reset show={showReset} goCenter={goCenter} setShow={setShowReset} /> : <></>}
+      {!isMobile ? (
+        <>
+          <Request show={showRequest} goCenter={goCenter} setShow={setShowRequest} />
+          {showReset ? <Reset show={showReset} goCenter={goCenter} setShow={setShowReset} /> : <></>}
+        </>
+      ) : (
+        <>
+          {go == "right" ? <Request show={showRequest} goCenter={goCenter} setShow={setShowRequest} /> : <></>}
+          {go == "left" ? <Reset show={showReset} goCenter={goCenter} setShow={setShowReset} /> : <></>}
+        </>
+      )}
     </>
   );
 }

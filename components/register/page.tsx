@@ -1,18 +1,6 @@
 "use client";
 import { useState } from "react";
-import {
-  ConatinerLogin,
-  DivLogin,
-  InputText,
-  Logo,
-  SpanInputText,
-  TextLogin,
-  ForgotPassword,
-  CreateAccount,
-  LineWidget,
-  LoginWithGoogle,
-  LogoGoogle,
-} from "../login/styles";
+import { ConatinerLogin, DivLogin, InputText, Logo, SpanInputText, TextLogin, CreateAccount, LineWidget, LoginWithGoogle, LogoGoogle } from "../login/styles";
 import { showAlert } from "../alert/page";
 import PwdComponent from "../formComponents/passwordField";
 import { registerAPI } from "@/service/requests/authenticate";
@@ -44,7 +32,7 @@ export default function LoginComponent() {
   return (
     <ConatinerLogin>
       <Logo src="/png/logo.png" />
-      <DivLogin>
+      <DivLogin $go="center">
         <TextLogin>REGISTRAR</TextLogin>
         <SpanInputText>
           <InputText

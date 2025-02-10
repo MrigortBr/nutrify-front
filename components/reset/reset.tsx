@@ -1,5 +1,4 @@
 "use client";
-import { LoginButton } from "@/components/login/styles";
 import { BackgroundModal, BackPage, TitleReset } from "./styled";
 import { Dispatch, SetStateAction, useState } from "react";
 import PwdComponent from "../formComponents/passwordField";
@@ -8,6 +7,7 @@ import { resetPassword } from "@/service/requests/reset";
 import { showAlert } from "../alert/page";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Routes } from "@/enum/Routes";
+import FormButton from "../formComponents/formButton";
 
 type Prop = {
   show: boolean;
@@ -29,8 +29,9 @@ export default function Reset(prop: Prop) {
     if (!tokenMinSize(token)) return;
 
     const result = await resetPassword(password, token || "");
-
+    setSending("sending");
     showAlert(result.data?.message || "", result.success ? "success" : "error");
+    setSending("free");
 
     if (result.success) {
       close();
@@ -42,7 +43,7 @@ export default function Reset(prop: Prop) {
 
   function close() {
     prop.setShow(false);
-    setInterval(() => {
+    setTimeout(() => {
       prop.goCenter();
     }, 300);
   }
@@ -53,9 +54,9 @@ export default function Reset(prop: Prop) {
       <BackPage src="/icons/arrow-left.svg" onClick={close}></BackPage>
       <PwdComponent setPassword={setPassword} password={password} onEnter={reset}></PwdComponent>
       <PwdComponent placeholder="confirme sua senha" setPassword={setPasswordConfirm} password={passwordConfirm} onEnter={reset}></PwdComponent>
-      <LoginButton style={{ height: "10vh", marginTop: "0%" }} onClick={reset} sending={sending}>
+      <FormButton function={reset} sending={sending}>
         Atualizar Senha
-      </LoginButton>
+      </FormButton>
     </BackgroundModal>
   );
 }

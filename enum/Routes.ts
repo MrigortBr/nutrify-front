@@ -3,6 +3,7 @@ export enum RoutesAPI {
   register = "/user/register",
   requestReset = "/reset/request",
   resetPWD = "/reset/",
+  about = "/",
 }
 
 export enum Routes {
