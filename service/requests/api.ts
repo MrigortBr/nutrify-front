@@ -18,7 +18,7 @@ class AppService {
 
   constructor() {
     this.api = axios.create({
-      baseURL: process.env.API_URL || "http://localhost:2000",
+      baseURL: process.env.NEXT_PUBLIC_API_URL,
       headers: {
         "Content-Type": "application/json",
       },
