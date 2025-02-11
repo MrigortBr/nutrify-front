@@ -4,12 +4,14 @@ import { LoginButton } from "../login/styles";
 type Props = {
   sending: "sending" | "free";
   function: () => void;
-  children: React.ReactNode; // Permite receber conteúdo dentro do botão
+  children: React.ReactNode;
+  multiplier?: number;
+  style?: React.CSSProperties;
 };
 
 export default function FormButton(props: Props) {
   return (
-    <LoginButton $sending={props.sending} onClick={props.function}>
+    <LoginButton $multiplier={props.multiplier} style={props.style} $sending={props.sending} onClick={props.function}>
       {props.sending == "sending" ? <CircularProgress size={"2rem"} sx={{ color: "rgb(89, 199, 21)" }} /> : props.children}
     </LoginButton>
   );

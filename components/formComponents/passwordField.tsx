@@ -7,6 +7,7 @@ type Props = {
   password: string;
   onEnter: () => void;
   placeholder?: string;
+  style?: React.CSSProperties;
 };
 
 export default function PwdComponent(props: Props) {
@@ -20,6 +21,7 @@ export default function PwdComponent(props: Props) {
   return (
     <SpanInputText>
       <InputText
+        style={props.style}
         onKeyDown={(e) => e.key === "Enter" && props.onEnter()}
         className="pwd"
         placeholder={props.placeholder || "senha"}

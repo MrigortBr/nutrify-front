@@ -91,7 +91,7 @@ export default function LoginComponent() {
             setGo("right");
           }}
         >
-          Esqueceu sua senha?{" "}
+          Esqueceu sua senha?
         </ForgotPassword>
         <FormButton function={login} sending={sending}>
           Entrar
@@ -110,7 +110,7 @@ export default function LoginComponent() {
       </DivLogin>
       {!isMobile ? (
         <>
-          <Request show={showRequest} goCenter={goCenter} setShow={setShowRequest} />
+          {showRequest ? <Request show={showRequest} goCenter={goCenter} setShow={setShowRequest} /> : <></>}
           {showReset ? <Reset show={showReset} goCenter={goCenter} setShow={setShowReset} /> : <></>}
         </>
       ) : (

@@ -8,7 +8,6 @@ export const ConatinerLogin = styled.main`
   display: flex;
   position: relative;
   font-family: "Karla", serif;
-  user-select: none;
   overflow-x: hidden;
 `;
 
@@ -33,6 +32,7 @@ export const DivLogin = styled.div<{ $go: "left" | "right" | "center" }>`
   border-radius: 20px;
   margin: auto;
   border: 2px solid rgba(88, 199, 21, 0.25);
+  box-shadow: 0px 3px 20px 0px rgba(0, 0, 0, 0.5);
   box-sizing: border-box;
   display: flex;
   flex-wrap: wrap;
@@ -40,6 +40,7 @@ export const DivLogin = styled.div<{ $go: "left" | "right" | "center" }>`
   position: absolute;
   left: 35vw;
   top: 10vh;
+  user-select: none;
 
   @media (max-width: 768px) {
     width: 80vw;
@@ -124,7 +125,7 @@ export const ForgotPassword = styled.p`
   }
 `;
 
-export const LoginButton = styled.button<{ $sending: "sending" | "free" }>`
+export const LoginButton = styled.button<{ $sending: "sending" | "free"; $multiplier?: number }>`
   background-color: #05ba64;
   font-size: calc(var(--px) * 24);
   border-radius: 20px;
@@ -136,6 +137,14 @@ export const LoginButton = styled.button<{ $sending: "sending" | "free" }>`
   transition: 300ms;
   font-family: "Imprima", serif;
   color: #000000;
+
+  ${({ $multiplier }) =>
+    $multiplier
+      ? `
+    width: calc(36.8% * ${$multiplier});
+    height: calc(8.3% * ${$multiplier});
+  `
+      : ``}
 
   @media (max-width: 768px) {
     font-size: calc((var(--px) * 24) * 4);
