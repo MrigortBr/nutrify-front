@@ -19,6 +19,7 @@ export default function Reset(prop: Prop) {
   const [sending, setSending] = useState<"sending" | "free">("free");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [localShow, setLocalShow] = useState<boolean>(prop.show);
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
@@ -42,19 +43,26 @@ export default function Reset(prop: Prop) {
   }
 
   function close() {
-    prop.setShow(false);
+    setLocalShow(false);
     setTimeout(() => {
       prop.goCenter();
+      prop.setShow(false);
     }, 300);
   }
 
   return (
-    <BackgroundModal closed={prop.show ? "closed" : "open"} side="right">
+    <BackgroundModal closed={localShow ? "closed" : "open"} side="right">
       <TitleReset>Redefinir senha</TitleReset>
       <BackPage src="/icons/arrow-left.svg" onClick={close}></BackPage>
-      <PwdComponent setPassword={setPassword} password={password} onEnter={reset}></PwdComponent>
-      <PwdComponent placeholder="confirme sua senha" setPassword={setPasswordConfirm} password={passwordConfirm} onEnter={reset}></PwdComponent>
-      <FormButton function={reset} sending={sending}>
+      <PwdComponent style={{ height: "7vh", marginBottom: "0%" }} setPassword={setPassword} password={password} onEnter={reset}></PwdComponent>
+      <PwdComponent
+        style={{ height: "7vh", marginBottom: "0%" }}
+        placeholder="confirme sua senha"
+        setPassword={setPasswordConfirm}
+        password={passwordConfirm}
+        onEnter={reset}
+      ></PwdComponent>
+      <FormButton multiplier={1.7} function={reset} sending={sending}>
         Atualizar Senha
       </FormButton>
     </BackgroundModal>
