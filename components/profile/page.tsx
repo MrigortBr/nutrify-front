@@ -26,6 +26,7 @@ import {
   ProfilePictureSpan,
   PictureInfoSpan,
   PictureInfoSpanContent,
+  NoContent,
 } from "./styled";
 import { followAPI, picture, profileAPI, profileMarkedAPI, ProfileUser, simpleProfile, unfollowAPI, updateAPI } from "@/service/requests/profile";
 import { useRouter } from "next/navigation";
@@ -47,6 +48,7 @@ export default function ProfileComponent() {
   const [editProfile, setEditProfile] = useState(false);
   const [loadContent, setLoadContent] = useState(false);
   const [loadFollow, setLoadFollow] = useState(false);
+  const [followers, setFollowers] = useState(profile?.followers ?? 0);
   const [markedPictures, setMarkedPicture] = useState<picture[]>([]);
   const [markedFinded, setMarkedFinded] = useState(false);
   const [name, setName] = useState("");
@@ -60,10 +62,13 @@ export default function ProfileComponent() {
 
   async function follow() {
     if (profile) {
+      setFollowers((o) => o + 1);
+
       setLoadFollow(true);
       const r = await followAPI(profile.username);
       if (!r.success) {
         showAlert(r.data?.message || "", "error");
+        setFollowers((o) => o - 1);
         return;
       }
       setIFollow(true);
@@ -73,11 +78,13 @@ export default function ProfileComponent() {
 
   async function unfollow() {
     if (profile) {
+      setFollowers((o) => o - 1);
       setLoadFollow(true);
       const r = await unfollowAPI(profile.username);
 
       if (!r.success) {
         showAlert(r.data?.message || "", "error");
+        setFollowers((o) => o + 1);
         return;
       }
 
@@ -251,8 +258,9 @@ export default function ProfileComponent() {
   }
 
   function openPlaning() {
-    setLoadContent(false);
-    setPageOnProfile(3);
+    showAlert("Função em desenvolvimento", "info");
+    // setLoadContent(false);
+    // setPageOnProfile(3);
   }
 
   function openPictures() {
@@ -292,7 +300,7 @@ export default function ProfileComponent() {
                   ) : (
                     <>{iFollowUser ? <UserButton onClick={unfollow}>Seguindo</UserButton> : <UserButton onClick={follow}>Seguir</UserButton>}</>
                   )}
-                  <UserButton>Mensagem</UserButton>
+                  <UserButton onClick={() => showAlert("Função em desenvolvimento", "info")}>Mensagem</UserButton>
                 </>
               ) : (
                 <>
@@ -312,7 +320,7 @@ export default function ProfileComponent() {
                 <b>{profile?.pictures?.length || 0}</b> Publicações
               </UserStatsItem>
               <UserStatsItem>
-                <b>{profile?.followers || 0}</b> Seguidores
+                <b>{followers}</b> Seguidores
               </UserStatsItem>
               <UserStatsItem>
                 <b>{profile?.following || 0}</b> Seguindo
@@ -325,7 +333,7 @@ export default function ProfileComponent() {
               <UserBio>{bio != undefined ? bio : "Nada a informar"}</UserBio>
             )}
             <UserRec>
-              Seguido(a) por&nbsp;<b>{" @"}fulano</b>,&nbsp;<b>cicrano</b>&nbsp;e outras 15 pessoas
+              Seguido(a) por&nbsp;<b>{" @"}fulano</b>,&nbsp;<b>cicrano</b>&nbsp;e outras 15 pessoas (Static)
             </UserRec>
           </ProfileInfoContainer>
           <ProfileShowContainer>
@@ -360,6 +368,7 @@ export default function ProfileComponent() {
                     </PictureInfoSpan>
                   </ProfilePictureSpan>
                 ))}
+                {profile?.pictures?.length == 0 ? <NoContent>Este perfil não fez uma publicação.</NoContent> : <></>}
               </ProfilePictures>
             ) : (
               <></>
@@ -383,6 +392,7 @@ export default function ProfileComponent() {
                         </PictureInfoSpan>
                       </ProfilePictureSpan>
                     ))}
+                    {markedPictures.length == 0 ? <NoContent>Este perfil não foi marcado em nada.</NoContent> : <></>}
                   </ProfilePictures>
                 ) : (
                   <LoadingSpinner

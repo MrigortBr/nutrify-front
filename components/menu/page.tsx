@@ -48,7 +48,9 @@ export default function Index() {
         const response = await profileSimpleAPI();
 
         if (!response.success) {
-          showAlert("Faça o login para ter acesso a todas as páginas!", "info");
+          router.push(Routes.login);
+          localStorage.removeItem("simpleProfile");
+          localStorage.removeItem("token");
           return;
         }
 
@@ -117,17 +119,17 @@ export default function Index() {
         <ComponentText>Página Inicial</ComponentText>
       </MenuComponent>
 
-      <MenuComponent $select={usePage.search(".search.") != -1 ? true : false} onClick={() => setUsePage((e) => (e += ".search."))}>
+      <MenuComponent $select={usePage.search(".search.") != -1 ? true : false} onClick={() => showAlert("Função em desenvolvimento", "info")}>
         <ComponentIcon src="/icons/search.svg" />
         <ComponentText>Buscar</ComponentText>
       </MenuComponent>
 
-      <MenuComponent $select={usePage.search(".alert.") != -1 ? true : false} onClick={() => setUsePage((e) => (e += ".alert."))}>
+      <MenuComponent $select={usePage.search(".alert.") != -1 ? true : false} onClick={() => showAlert("Função em desenvolvimento", "info")}>
         <ComponentIcon src="/icons/alert.svg" />
         <ComponentText>Notificações</ComponentText>
       </MenuComponent>
 
-      <MenuComponent $select={usePage.search(".message.") != -1 ? true : false} onClick={() => setUsePage((e) => (e += ".message."))}>
+      <MenuComponent $select={usePage.search(".message.") != -1 ? true : false} onClick={() => showAlert("Função em desenvolvimento", "info")}>
         <ComponentIcon src="/icons/chat-message.svg" />
         <ComponentText>Mensagens</ComponentText>
       </MenuComponent>

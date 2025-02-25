@@ -194,6 +194,15 @@ export const UserRec = styled.p`
   }
 `;
 
+export const NoContent = styled.h1`
+  width: 100%;
+  grid-column-start: 1;
+  grid-column-end: 5;
+  text-align: center;
+  color: ${(props) => props.theme.palette.primary.main};
+  font-size: calc(var(--px) * 28);
+`;
+
 export const ProfileShowContainer = styled.div`
   width: 48.9544vw;
   height: 74.4vh;

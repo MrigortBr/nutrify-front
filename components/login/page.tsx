@@ -106,7 +106,7 @@ export default function LoginComponent() {
           <WidgetLine></WidgetLine>
           <LineText>OU</LineText>
         </BackgroundLine>
-        <LoginWithGoogle>
+        <LoginWithGoogle onClick={() => showAlert("Função em desenvolvimento", "info")}>
           <LogoGoogle src="/png/googleLogo.png" />
           login com o google
         </LoginWithGoogle>
