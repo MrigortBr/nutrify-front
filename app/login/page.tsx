@@ -9,7 +9,7 @@ export default function Home() {
 
   return (
     <Suspense>
-      <LayoutBody main={<LoginComponent />} />
+      <LoginComponent />
     </Suspense>
   );
 }

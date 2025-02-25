@@ -1,6 +1,7 @@
 "use client";
 import { JSX } from "react";
 import { ContainerBody, FooterBody, HeaderBody, MainBody } from "./styled";
+import MyModal from "@/components/MyCustomModal/page";
 
 type Props = {
   header?: JSX.Element;
@@ -14,6 +15,7 @@ export default function LayoutBody(props: Props) {
       <HeaderBody>{props.header}</HeaderBody>
       <MainBody>{props.main}</MainBody>
       <FooterBody>{props.footer}</FooterBody>
+      <MyModal />
     </ContainerBody>
   );
 }

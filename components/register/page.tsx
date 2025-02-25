@@ -26,6 +26,10 @@ export default function LoginComponent() {
     showAlert(result.data?.message || "", result.success ? "success" : "error");
 
     if (result.success) {
+      const jwt = result.data?.jwt;
+      if (jwt) localStorage.setItem("token", jwt);
+      else showAlert("Houve um erro tente fazer o login novamente", "warning");
+      router.push(Routes.home);
     }
   }
 
