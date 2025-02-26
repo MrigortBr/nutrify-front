@@ -75,7 +75,7 @@ export function showAlert(message: string, severity: "success" | "error" | "info
                 right: "10px",
                 bottom: "10vh",
                 boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
-                zIndex: 10,
+                zIndex: 9999999,
               }}
               icon={<CheckCircleTwoTone fontSize="inherit" />}
               severity={severity}

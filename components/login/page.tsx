@@ -65,7 +65,10 @@ export default function LoginComponent() {
 
     showAlert(result.data?.message || "", result.success ? "success" : "error");
     if (result.success) {
-      console.log(result.data?.jwt);
+      const jwt = result.data?.jwt;
+      if (jwt) localStorage.setItem("token", jwt);
+      else showAlert("Houve um erro tente fazer o login novamente", "warning");
+      router.push(Routes.home);
     }
   }
 
@@ -103,7 +106,7 @@ export default function LoginComponent() {
           <WidgetLine></WidgetLine>
           <LineText>OU</LineText>
         </BackgroundLine>
-        <LoginWithGoogle>
+        <LoginWithGoogle onClick={() => showAlert("Função em desenvolvimento", "info")}>
           <LogoGoogle src="/png/googleLogo.png" />
           login com o google
         </LoginWithGoogle>

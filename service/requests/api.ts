@@ -13,6 +13,10 @@ export type dataResponse = {
   statusCode?: number;
 };
 
+type HeaderRequest = {
+  Authorization: string;
+};
+
 class AppService {
   private api: AxiosInstance;
 
@@ -25,23 +29,24 @@ class AppService {
     });
   }
 
-  async get<T>(url: string, params?: object): Promise<ApiResponse<dataResponse>> {
-    return this.ThenCatch(this.api.get(url, { params }));
+  async get<T>(url: string, params?: object, headers?: HeaderRequest): Promise<ApiResponse<dataResponse>> {
+    return this.ThenCatch(this.api.get(url, { params, headers }));
   }
 
-  async post<T>(url: string, data?: object): Promise<ApiResponse<dataResponse>> {
-    return this.ThenCatch(this.api.post(url, data)).catch((e) => {
-      console.log("catch");
+  async post<T>(url: string, data?: object, headers?: HeaderRequest): Promise<ApiResponse<dataResponse>> {
+    return this.ThenCatch(this.api.post(url, data, { headers: headers })).catch((e) => {
       return e;
     });
   }
 
-  async put<T>(url: string, data?: object): Promise<ApiResponse<dataResponse>> {
-    return this.ThenCatch(this.api.put(url, data));
+  async put<T>(url: string, data?: object, headers?: HeaderRequest): Promise<ApiResponse<dataResponse>> {
+    return this.ThenCatch(this.api.put(url, data, { headers: headers })).catch((e) => {
+      return e;
+    });
   }
 
-  async delete<T>(url: string): Promise<ApiResponse<dataResponse>> {
-    return this.ThenCatch(this.api.delete(url));
+  async delete<T>(url: string, params?: object, headers?: HeaderRequest): Promise<ApiResponse<dataResponse>> {
+    return this.ThenCatch(this.api.get(url, { params, headers }));
   }
 
   private ThenCatch(res: Promise<AxiosResponse<dataResponse, dataResponse>>) {
