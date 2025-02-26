@@ -6,7 +6,6 @@ export type comment = {
   username: string;
   comment: string;
   created_at: string;
-  iCanComment: boolean;
 };
 
 export type ListPost = {
@@ -16,7 +15,7 @@ export type ListPost = {
   commentsNumber: number;
 };
 
-export async function getComments(idPost: string, page: number = 0): Promise<ApiResponse<dataResponse & { comments?: ListPost }>> {
+export async function getComments(idPost: string, page: number = 0, size: number = 10): Promise<ApiResponse<dataResponse & { comments?: ListPost }>> {
   const apiKey = localStorage.getItem("token");
 
   if (!apiKey) {
@@ -26,5 +25,5 @@ export async function getComments(idPost: string, page: number = 0): Promise<Api
     };
   }
 
-  return await ApiService.get(RoutesAPI.getComments + idPost + `?page=${page}`, {}, { Authorization: apiKey });
+  return await ApiService.get(RoutesAPI.getComments + idPost + `?page=${page}&size=${size}`, {}, { Authorization: apiKey });
 }

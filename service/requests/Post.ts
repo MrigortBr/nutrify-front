@@ -26,7 +26,7 @@ export interface Post {
   caption: string;
   posted_at?: Date | null;
   created_at: Date;
-  userMark: string[];
+  userMark: { username: string; picture: string }[];
   tags?: string[]; // O campo de tags é opcional
 }
 
@@ -53,11 +53,13 @@ export interface SimplePost {
   picture: string; //
   caption: string; //
   created_at: Date; //
-  userMark: string[];
+  userMark: mark[];
   likes: number;
   commentsNumber: number;
   comments: comments[];
 }
+
+export type mark = { username: string; picture: string };
 
 export interface SimplePostNew {
   id: string;

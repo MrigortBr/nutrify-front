@@ -103,6 +103,7 @@ export const PostCommentsWithComments = styled(PostComments)`
   flex-direction: column;
   overflow-x: hidden;
   overflow-y: auto;
+  max-height: 40vh;
 
   & > p {
     padding-left: 3%;
@@ -126,6 +127,7 @@ export const PostFunctionItemHome = styled.div`
 
 export const ItemSvg = styled.span<{ $liked: boolean }>`
   cursor: pointer;
+  margin-right: 3%;
 
   & > span {
     height: 100%;
@@ -136,6 +138,7 @@ export const ItemSvg = styled.span<{ $liked: boolean }>`
 
   & > span > svg {
     fill: ${(props) => (!props.$liked ? props.theme.palette.grey[900] : props.theme.palette.primary.light)};
+
     width: 100%;
     height: 70%;
     aspect-ratio: 1/1;
@@ -148,13 +151,14 @@ export const ItemSvg = styled.span<{ $liked: boolean }>`
   }
 `;
 
-export const PostComment = styled.textarea`
+export const PostComment = styled.input`
   background-color: transparent;
   border: 0;
   color: #01381e;
-  width: 99.5%;
+  width: 95%;
   margin: auto;
-  height: 5vh;
+  margin-left: 0;
+  height: 100%;
   resize: none;
   font-size: calc(var(--px) * 26);
   font-family: "Imprima";
@@ -181,7 +185,7 @@ const openSendButton = keyframes`
     opacity: 0;
   }
   100%{
-    top: 35%;
+    top: 0;
   }
 
 `;
@@ -192,7 +196,7 @@ const closeSendButton = keyframes`
     opacity: 0;
   }
   0%{
-    top: 35%;
+    top: 0;
   }
 
 `;
@@ -211,9 +215,10 @@ export const ButtonSendComment = styled.button<{ $show: boolean }>`
   animation-name: ${({ $show }) => ($show ? openSendButton : closeSendButton)};
   animation-fill-mode: forwards;
   animation-duration: 500ms;
+  top: 0;
 
   & > span {
-    height: 60%;
+    height: 80%;
     margin: auto;
     display: flex;
     align-items: center;

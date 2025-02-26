@@ -113,6 +113,7 @@ export const ButtonSaveConfig = styled.button<{ $reverse: boolean }>`
   cursor: pointer;
   position: absolute;
   left: 20%;
+  transition: 200ms;
 
   top: 100vh;
   animation-name: ${({ $reverse }) => ($reverse ? animateButton : animateButtonR)};
@@ -120,6 +121,6 @@ export const ButtonSaveConfig = styled.button<{ $reverse: boolean }>`
   animation-duration: 500ms;
 
   &:hover {
-    transform: scaleX(1.1);
+    transform: scaleX(1.05);
   }
 `;

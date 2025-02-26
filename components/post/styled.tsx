@@ -13,5 +13,5 @@ export const PostContainer = styled.div`
   display: grid;
   border: 1px solid black;
   grid-template-columns: 70% 30%;
-  grid-template-rows: 15% 55% 10% 20%;
+  grid-template-rows: 15% 45% 10% 10% 20%;
 `;

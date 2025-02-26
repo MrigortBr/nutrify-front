@@ -17,13 +17,20 @@ import {
   PostPictureUser,
   PostUsername,
   SendCommentButton,
+  UserMarked,
+  ImageMarked,
+  UserEdit,
 } from "./styled";
 import { useParams, useRouter, useSearchParams, usePathname } from "next/navigation";
-import { comments, getSimplePost, likeAPI, sendCommentAPI } from "@/service/requests/Post";
+import { comments, getSimplePost, likeAPI, mark, sendCommentAPI } from "@/service/requests/Post";
 import { showAlert } from "../alert/page";
 import { Routes } from "@/enum/Routes";
 import LoadingSpinner from "../LoadingSpinner/page";
 import { simpleProfile } from "@/service/requests/profile";
+import Image from "next/image";
+import { openModal } from "../MyCustomModal/page";
+import ModalEditPost from "../modalEditPost/page";
+import { PostCaption } from "../HomeComponent/styled";
 
 export default function PostComponent() {
   const [liked, setLiked] = useState(false);
@@ -34,11 +41,17 @@ export default function PostComponent() {
   const [image, setImage] = useState("");
   const [userImage, setUserImage] = useState("");
   const [username, setUsername] = useState("");
+  const [caption, setCaption] = useState("");
   const [comments, setComments] = useState<comments[]>([]);
   const [commentsNumber, setCommentsNumber] = useState(0);
   const [icanComment, setIcanComment] = useState(false);
   const [simpleProfile, setSimpleProfile] = useState<simpleProfile>();
   const [comment, setComment] = useState("");
+  const [marked, setMarked] = useState<mark[]>([]);
+  const [showEdit, setShowEdit] = useState(false);
+  const [showFullCaption, setShowFullCaption] = useState(false);
+
+  const [showMarked, setShowMarked] = useState(false);
 
   const param = useSearchParams();
   const router = useRouter();
@@ -61,6 +74,9 @@ export default function PostComponent() {
         setLiked(simplePost.iLike);
         setCommentsNumber(simplePost.commentsNumber);
         setIcanComment(simplePost.iCanComment);
+        setMarked(simplePost.userMark);
+        setCaption(simplePost.caption);
+        console.log(simplePost.caption);
       }
 
       setLoad(false);
@@ -126,17 +142,56 @@ export default function PostComponent() {
         <>
           <PostPictureContainer>
             <PostPicture src={image} />
+            {marked.length > 0 ? (
+              <UserMarked $show={showMarked} onMouseEnter={() => setShowMarked(true)} onMouseLeave={() => setShowMarked(false)}>
+                {showMarked ? (
+                  <>
+                    {marked.map((v, i) => (
+                      <>
+                        <p key={i} onClick={() => router.push(Routes.profile + `?u=${v.username}`)}>
+                          {v.username}
+                          <ImageMarked src={v.picture} alt={v.username} key={i} />
+                        </p>
+                      </>
+                    ))}
+                  </>
+                ) : (
+                  <MySvg src="icons/user.svg"></MySvg>
+                )}
+              </UserMarked>
+            ) : (
+              <></>
+            )}
+            {username == simpleProfile?.username ? (
+              <UserEdit
+                $show={showEdit}
+                onMouseEnter={() => setShowEdit(true)}
+                onMouseLeave={() => setShowEdit(false)}
+                onClick={() => openModal(<ModalEditPost post={{ id: Number(param.get("id")) || 0, comments: 0, likes: 5, picture: image }} />)}
+              >
+                {showEdit ? (
+                  <p>
+                    <MySvg src="icons/edit.svg"></MySvg>
+                    Editar
+                  </p>
+                ) : (
+                  <MySvg src="icons/edit.svg"></MySvg>
+                )}
+              </UserEdit>
+            ) : (
+              <></>
+            )}
           </PostPictureContainer>
           <PostHeader>
             <PostPictureSpan>
-              <PostPictureUser src={userImage} />
+              <PostPictureUser src={userImage || "/png/remo.jpg"} />
             </PostPictureSpan>
             <PostUsername>{username}</PostUsername>
           </PostHeader>
           <PostComments>
             {comments.map((v, index) => (
-              <PostComment key={index}>
-                <img src={v.pictureUser} alt="" />
+              <PostComment key={index} onClick={() => router.push(Routes.profile + `?u=${v.username}`)}>
+                <img src={v.pictureUser || "/png/remo.jpg"} alt="" />
                 <b>{v.username}</b> {v.comment}
               </PostComment>
             ))}
@@ -154,6 +209,9 @@ export default function PostComponent() {
               <></>
             )}
           </PostComments>
+          <PostCaption $showAll={showFullCaption} onClick={() => setShowFullCaption((o) => !o)}>
+            <b>@{username}:</b> {caption}
+          </PostCaption>
           <PostFunctions>
             <PostFunctionItem $liked={liked} onClick={like}>
               <MySvg src="icons/heart.svg" />

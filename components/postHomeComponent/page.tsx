@@ -27,6 +27,7 @@ import { showAlert } from "../alert/page";
 import { simpleProfile } from "@/service/requests/profile";
 import { Routes } from "@/enum/Routes";
 import { useRouter } from "next/navigation";
+import LoadingSpinner from "../LoadingSpinner/page";
 
 type Props = {
   post: SimplePostNew;
@@ -43,6 +44,10 @@ export default function PostHomeComponent(prop: Props) {
   const [newComment, setNewComment] = useState("");
   const [listPost, setListPost] = useState<ListPost>();
 
+  const [loadMoreComments, setLoadMoreComments] = useState(false);
+
+  const [page, setPage] = useState(0);
+
   const [liked, setLiked] = useState<boolean>(prop.post.ilike ?? false);
   const [sendLike, setSendLike] = useState(false);
   const [likes, setLikes] = useState<number>(prop.post.likes);
@@ -54,8 +59,6 @@ export default function PostHomeComponent(prop: Props) {
   const router = useRouter();
 
   useEffect(() => {
-    console.log(prop.post.iCanComment);
-
     const simpleS = localStorage.getItem("simpleProfile");
     if (simpleS) setSimpleProfile(JSON.parse(simpleS));
   }, []);
@@ -92,23 +95,31 @@ export default function PostHomeComponent(prop: Props) {
       return;
     }
 
-    await openComments();
+    const newComments = [{ id: "0", comment: newComment, created_at: new Date().toString(), username: simpleProfile?.username || "Eu: " }];
+
+    setComments((o) => newComments.concat(o));
     setShowComments(true);
   }
 
   async function openComments() {
     if (listPost == undefined || listPost.nextPage) {
-      let page = 0;
-      if (listPost?.page) page = Number(listPost.page) + 1;
-      const r = await getComments(prop.post.id, page);
+      setPage((o) => o + 1);
+      setLoadMoreComments(true);
+      const haveNewComment = comments.filter((v) => v.id == "0").length > 0;
+      const r = await getComments(prop.post.id, haveNewComment ? 0 : page, haveNewComment ? Math.floor((comments.length + 10) / 10) * 10 : 10);
 
       if (r.data?.comments) {
         setCommentsResponse(r.data.comments);
-        setComments((o) => o.concat(r.data?.comments?.comments ?? []));
+        if (page == 0 || haveNewComment) {
+          setComments(r.data?.comments?.comments);
+        } else {
+          setComments((o) => o.concat(r.data?.comments?.comments ?? []));
+        }
         setShowComments(true);
         setCommentsShow(comments.length);
         setCommentsMax(r.data.comments.commentsNumber);
         setListPost(r.data.comments);
+        setLoadMoreComments(false);
       }
     }
   }
@@ -126,11 +137,14 @@ export default function PostHomeComponent(prop: Props) {
       </PostPictureImgSpan>
       <PostActions>
         <PostFunctionItemHome style={{ marginRight: "3vw" }}>
-          <ItemSvg onClick={like} $liked={liked}>
+          <ItemSvg style={{ display: liked ? "none" : "" }} onClick={like} $liked={liked}>
+            <MySvg src="icons/heart-no.svg" />
+          </ItemSvg>
+          <ItemSvg style={{ display: liked ? "" : "none" }} onClick={like} $liked={liked}>
             <MySvg src="icons/heart.svg" />
           </ItemSvg>
           <ItemSvg onClick={openComments} $liked={false}>
-            <MySvg src="icons/chat.svg" />
+            <MySvg src="icons/chat-no.svg" />
           </ItemSvg>
         </PostFunctionItemHome>
         <PostFunctionItemHome>
@@ -141,7 +155,19 @@ export default function PostHomeComponent(prop: Props) {
         <b>@{prop.post.username}:</b> {prop.post.caption}
       </PostCaption>
       {!showComments ? (
-        <PostComments onClick={openComments}>Ver todos os {prop.post.commentsnumber} comentários</PostComments>
+        <>
+          {!loadMoreComments ? (
+            <>
+              {prop.post.commentsnumber > 0 ? (
+                <PostComments onClick={openComments}>Ver todos os {prop.post.commentsnumber} comentários</PostComments>
+              ) : (
+                <PostComments style={{ opacity: 0 }}> .</PostComments>
+              )}
+            </>
+          ) : (
+            <PostComments>Carregando Posts...</PostComments>
+          )}
+        </>
       ) : (
         <PostCommentsWithComments>
           <h4>
@@ -149,12 +175,18 @@ export default function PostHomeComponent(prop: Props) {
           </h4>
           {comments.map((comment, index) => (
             <p key={index}>
-              <b onClick={() => router.push(Routes.profile + `?u=${prop.post.username}`)}>@{comment.username}: </b>
+              <b onClick={() => router.push(Routes.profile + `?u=${comment.username}`)}>@{comment.username}: </b>
               {comment.comment} <span>{comment.created_at}</span>
             </p>
           ))}
           {comments.length != commentsMax ? (
-            <PostComments onClick={openComments}>Ver todos os {commentsMax - comments.length} comentários</PostComments>
+            <>
+              {!loadMoreComments ? (
+                <PostComments onClick={openComments}>Ver todos os {commentsMax - comments.length} comentários</PostComments>
+              ) : (
+                <PostComments>Carregando Posts...</PostComments>
+              )}
+            </>
           ) : (
             <></>
           )}
@@ -162,7 +194,11 @@ export default function PostHomeComponent(prop: Props) {
       )}
       {prop.post.iCanComment ? (
         <PostCommentSpan>
-          <PostComment value={newComment} onChange={(e) => setNewComment(e.currentTarget.value)} placeholder="Adicionar comentario"></PostComment>
+          {prop.post.commentsnumber > 0 ? (
+            <PostComment value={newComment} onChange={(e) => setNewComment(e.currentTarget.value)} placeholder="Adicionar comentario"></PostComment>
+          ) : (
+            <PostComment value={newComment} onChange={(e) => setNewComment(e.currentTarget.value)} placeholder="Seja o primeiro a comentar!"></PostComment>
+          )}
           <ButtonSendComment $show={newComment.length > 3} onClick={sendComment}>
             <MySvg src="icons/send.svg"></MySvg>
           </ButtonSendComment>
