@@ -37,8 +37,8 @@ import { allowedTypes } from "../ComponentPost/page";
 import { Routes } from "@/enum/Routes";
 import { openModal } from "../MyCustomModal/page";
 import ConfigComponent from "../configComponent/page";
-import ModalNewPost from "../modalNewPost/page";
 import ModalEditPost from "../modalEditPost/page";
+import ModalChat from "../modalChat/page";
 
 export default function ProfileComponent() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -219,7 +219,6 @@ export default function ProfileComponent() {
         setUsername(r.data.profile.username);
         setBio(r.data.profile.bio);
         setLoading(false);
-        console.log(r.data.profile);
       }
     } else {
       showAlert("Você precisar estar logado ou abrir um perfil valido!", "error");
@@ -271,6 +270,10 @@ export default function ProfileComponent() {
     router.push(Routes.post + id);
   }
 
+  function sendMessage() {
+    openModal(<ModalChat chatNew={{ username: username, picture: img }} />);
+  }
+
   return (
     <>
       {loading ? (
@@ -300,7 +303,7 @@ export default function ProfileComponent() {
                   ) : (
                     <>{iFollowUser ? <UserButton onClick={unfollow}>Seguindo</UserButton> : <UserButton onClick={follow}>Seguir</UserButton>}</>
                   )}
-                  <UserButton onClick={() => showAlert("Função em desenvolvimento", "info")}>Mensagem</UserButton>
+                  <UserButton onClick={() => sendMessage()}>Mensagem</UserButton>
                 </>
               ) : (
                 <>

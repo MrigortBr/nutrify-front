@@ -25,6 +25,11 @@ import ConfigComponent from "../configComponent/page";
 import NewPost from "../newPost/page";
 import ComponentPost from "../ComponentPost/page";
 import ModalNewPost from "../modalNewPost/page";
+import ModalChat from "../modalChat/page";
+import useSocket, { createMySocket } from "@/service/socket";
+import ModalSearch from "../modalSearch/page";
+
+export let socket: SocketIOClient.Socket;
 
 export default function Index() {
   const [usePage, setUsePage] = useState("");
@@ -91,6 +96,9 @@ export default function Index() {
     setUsePage(newTag);
   }
 
+  //useSocket();
+
+  socket = createMySocket();
   return (
     <MenuContainer>
       <LogoMenu>
@@ -119,17 +127,34 @@ export default function Index() {
         <ComponentText>Página Inicial</ComponentText>
       </MenuComponent>
 
-      <MenuComponent $select={usePage.search(".search.") != -1 ? true : false} onClick={() => showAlert("Função em desenvolvimento", "info")}>
+      <MenuComponent
+        $select={usePage.search(".search.") != -1 ? true : false}
+        onClick={() => {
+          openModal(<ModalSearch closeCall={closeCall} />);
+          setUsePage((e) => (e += ".search."));
+        }}
+      >
         <ComponentIcon src="/icons/search.svg" />
         <ComponentText>Buscar</ComponentText>
       </MenuComponent>
 
-      <MenuComponent $select={usePage.search(".alert.") != -1 ? true : false} onClick={() => showAlert("Função em desenvolvimento", "info")}>
+      <MenuComponent
+        $select={usePage.search(".alert.") != -1 ? true : false}
+        onClick={() => {
+          showAlert("Função em desenvolvimento", "info");
+        }}
+      >
         <ComponentIcon src="/icons/alert.svg" />
         <ComponentText>Notificações</ComponentText>
       </MenuComponent>
 
-      <MenuComponent $select={usePage.search(".message.") != -1 ? true : false} onClick={() => showAlert("Função em desenvolvimento", "info")}>
+      <MenuComponent
+        $select={usePage.search(".message.") != -1 ? true : false}
+        onClick={() => {
+          setUsePage((e) => (e += ".message."));
+          openModal(<ModalChat closeCall={closeCall} />);
+        }}
+      >
         <ComponentIcon src="/icons/chat-message.svg" />
         <ComponentText>Mensagens</ComponentText>
       </MenuComponent>

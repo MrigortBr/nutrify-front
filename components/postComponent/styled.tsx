@@ -1,6 +1,5 @@
 import styled, { keyframes } from "styled-components";
-import { UserPicture, UserPictureContainer } from "../menu/styled";
-import Image from "next/image";
+import { UserPicture } from "../menu/styled";
 
 export const PostHeader = styled.div`
   display: flex;
