@@ -20,12 +20,11 @@ import { configUpdate, getConfigAPI, PrivacyLevel, updateConfigAPI } from "@/ser
 import { showAlert } from "../alert/page";
 import LoadingSpinner from "../LoadingSpinner/page";
 
-const optionsComments = [
+export const optionsComments = [
   { value: "*", label: "Público" },
-  { value: "onlyFallowers", label: "Somente Seguidores" },
-  { value: "onlyIFallow", label: "Somente Quem Eu Sigo" },
-  { value: "fallowersAndIFallow", label: "Seguidores e Quem Eu Sigo" },
-  { value: "onlyI", label: "Somente eu" },
+  { value: "onlyFollowers", label: "Somente Seguidores" },
+  { value: "onlyIFollow", label: "Somente Quem Eu Sigo" },
+  { value: "followersAndIFollow", label: "Seguidores e Quem Eu Sigo" },
 ];
 
 type Props = {

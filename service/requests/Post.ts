@@ -2,16 +2,16 @@ import { RoutesAPI } from "@/enum/Routes";
 import ApiService, { ApiResponse, dataResponse } from "./api";
 export enum PostStatus {
   ALL = "*",
-  ONLY_FOLLOWERS = "onlyFallowers",
-  ONLY_I_FOLLOW = "onlyIFallow",
-  FOLLOWERS_AND_I_FOLLOW = "fallowersAndIFallow",
+  ONLY_FOLLOWERS = "onlyFollowers",
+  ONLY_I_FOLLOW = "onlyIFollow",
+  FOLLOWERS_AND_I_FOLLOW = "followersAndIFollow",
 }
 
 export enum VisibilityStatus {
   ALL = "*",
-  ONLY_FOLLOWERS = "onlyFallowers",
-  ONLY_I_FOLLOW = "onlyIFallow",
-  FOLLOWERS_AND_I_FOLLOW = "fallowersAndIFallow",
+  ONLY_FOLLOWERS = "onlyFollowers",
+  ONLY_I_FOLLOW = "onlyIFollow",
+  FOLLOWERS_AND_I_FOLLOW = "followersAndIFollow",
   DRAFT = "draft",
   ARCHIVED = "archived",
   PUBLISHED = "published",

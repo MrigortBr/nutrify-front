@@ -47,8 +47,6 @@ export function validateFormLogin(email: string, passwod: string) {
   if (!emailIsNullAndValid(email)) return false;
   if (!passwordIsNullAndMinSize(passwod)) return false;
 
-  console.log("Retornando true;");
-
   return true;
 }
 
@@ -87,8 +85,6 @@ export function validateFormRegister(name: string, email: string, confirmEmail: 
   if (!emailIsNullAndValid(email)) return false;
   if (!validateConfirmEmail(email, confirmEmail)) return false;
   if (!passwordIsNullAndMinSize(password)) return false;
-
-  console.log("Retornando true;");
 
   return true;
 }

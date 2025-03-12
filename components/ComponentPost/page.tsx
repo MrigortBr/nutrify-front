@@ -36,18 +36,18 @@ import LoadingSpinner from "../LoadingSpinner/page";
 
 const optionsVisibility = [
   { value: "*", label: "Público" },
-  { value: "onlyFallowers", label: "Somente Seguidores" },
-  { value: "onlyIFallow", label: "Somente Quem Eu Sigo" },
-  { value: "fallowersAndIFallow", label: "Seguidores e Quem Eu Sigo" },
+  { value: "onlyFollowers", label: "Somente Seguidores" },
+  { value: "onlyIFollow", label: "Somente Quem Eu Sigo" },
+  { value: "followersAndIFollow", label: "Seguidores e Quem Eu Sigo" },
   { value: "draft", label: "Rascunho" },
   { value: "archived", label: "Arquivado" },
 ];
 
 export const optionsComments = [
   { value: "*", label: "Público" },
-  { value: "onlyFallowers", label: "Somente Seguidores" },
-  { value: "onlyIFallow", label: "Somente Quem Eu Sigo" },
-  { value: "fallowersAndIFallow", label: "Seguidores e Quem Eu Sigo" },
+  { value: "onlyFollowers", label: "Somente Seguidores" },
+  { value: "onlyIFollow", label: "Somente Quem Eu Sigo" },
+  { value: "followersAndIFollow", label: "Seguidores e Quem Eu Sigo" },
 ];
 
 export const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif"];

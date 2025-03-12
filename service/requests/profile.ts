@@ -73,9 +73,9 @@ export type configUpdate = configPrivacy & {
 
 export enum PrivacyLevel {
   Public = "*",
-  OnlyFollowers = "onlyFallowers",
-  OnlyIFollow = "onlyIFallow",
-  FollowersAndIFollow = "fallowersAndIFallow",
+  OnlyFollowers = "onlyFollowers",
+  OnlyIFollow = "onlyIFollow",
+  FollowersAndIFollow = "followersAndIFollow",
   OnlyMe = "onlyI",
 }
 

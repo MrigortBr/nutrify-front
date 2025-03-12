@@ -76,7 +76,6 @@ export default function PostComponent() {
         setIcanComment(simplePost.iCanComment);
         setMarked(simplePost.userMark);
         setCaption(simplePost.caption);
-        console.log(simplePost.caption);
       }
 
       setLoad(false);
