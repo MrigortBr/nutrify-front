@@ -23,6 +23,18 @@ export default function HomeComponent() {
   const [showAll, setShowAll] = useState(false);
   const [load, setLoad] = useState(true);
   const [posts, setPosts] = useState<SimplePostNew[]>([]);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.matchMedia("(max-width: 768px)").matches);
+    };
+
+    checkMobile(); // Verifica no carregamento
+    window.addEventListener("resize", checkMobile); // Atualiza ao redimensionar
+
+    return () => window.removeEventListener("resize", checkMobile);
+  });
 
   useEffect(() => {
     const getData = async () => {

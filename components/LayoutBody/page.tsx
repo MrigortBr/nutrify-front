@@ -1,5 +1,5 @@
 "use client";
-import { JSX } from "react";
+import { JSX, useState } from "react";
 import { ContainerBody, FooterBody, HeaderBody, MainBody } from "./styled";
 import MyModal from "@/components/MyCustomModal/page";
 
@@ -10,9 +10,11 @@ type Props = {
 };
 
 export default function LayoutBody(props: Props) {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
   return (
     <ContainerBody>
-      <HeaderBody>{props.header}</HeaderBody>
+      <HeaderBody>{isMobile ? <></> : props.header}</HeaderBody>
       <MainBody>{props.main}</MainBody>
       <FooterBody>{props.footer}</FooterBody>
       <MyModal />

@@ -1,10 +1,57 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
-export const MenuContainer = styled.div`
+const enter = keyframes`
+  0%{
+    left: -80vw;
+  }
+
+  100%{
+    left: 0vw;
+  }
+`;
+
+const enterAfter = keyframes`
+  0%{
+    opacity: 0;
+  }
+
+  100%{
+    opacity: 1;
+  }
+`;
+
+export const MenuContainer = styled.div<{ $active?: boolean }>`
   width: 18vw;
   height: 100vh;
   background-color: ${(props) => props.theme.palette.background.default};
   border-right: 2px solid ${(props) => props.theme.palette.primary.main};
+
+  @media (max-width: 768px) {
+    left: -80vw;
+    width: 60vw;
+    position: absolute;
+    z-index: 9999;
+    border-right: 4px solid ${(props) => props.theme.palette.primary.main};
+    animation: ${enter};
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+
+    &::after {
+      position: absolute;
+      content: " ";
+      width: 100vw;
+      background-color: rgba(0, 0, 0, 0.5);
+      height: 100vh;
+      top: 0;
+      opacity: 0;
+      left: 60vw;
+
+      animation: ${enterAfter};
+      animation-duration: 500ms;
+      animation-delay: 500ms;
+      animation-fill-mode: forwards;
+    }
+  }
 `;
 
 export const LogoMenu = styled.span`
@@ -25,6 +72,10 @@ export const TextLogoMenu = styled.h1`
   text-align: center;
   font-family: "Imprima";
   font-size: calc(var(--px) * 40);
+
+  @media (max-width: 768px) {
+    font-size: calc((var(--px) * 40) * 4);
+  }
 `;
 
 export const UserInfo = styled.div`
@@ -35,6 +86,10 @@ export const UserInfo = styled.div`
   height: 20%;
   margin: auto;
   cursor: pointer;
+
+  @media (max-width: 768px) {
+    width: 80%;
+  }
 `;
 
 export const UserPictureContainer = styled.span`
@@ -59,6 +114,10 @@ export const UserPictureContainer = styled.span`
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#01381e",endColorstr="#039e55",GradientType=1);
     z-index: 2;
   }
+
+  @media (max-width: 768px) {
+    width: 40%;
+  }
 `;
 
 export const UserPicture = styled.img`
@@ -77,6 +136,11 @@ export const UserName = styled.p`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    font-size: calc((var(--px) * 24) * 4);
+  }
 `;
 
 export const UserSign = styled.p`
@@ -84,6 +148,10 @@ export const UserSign = styled.p`
   font-size: calc(var(--px) * 20);
   color: ${(props) => props.theme.palette.text.secondary};
   font-family: "Imprima";
+
+  @media (max-width: 768px) {
+    font-size: calc((var(--px) * 20) * 4);
+  }
 `;
 
 export const MenuComponent = styled.div<{ $select: boolean }>`
@@ -129,4 +197,17 @@ export const ComponentText = styled.h3`
   font-family: "Imprima";
   display: flex;
   align-items: center;
+
+  @media (max-width: 768px) {
+    font-size: calc((var(--px) * 20) * 4);
+  }
+`;
+
+export const MenuButton = styled.button<{ $open: boolean }>`
+  position: absolute;
+  width: 10vw;
+  height: 10vw;
+  background-color: red;
+  z-index: 10000;
+  left: ${({ $open }) => ($open ? "60vw" : "0vw")};
 `;

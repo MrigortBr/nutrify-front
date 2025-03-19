@@ -39,6 +39,13 @@ import { openModal } from "../MyCustomModal/page";
 import ConfigComponent from "../configComponent/page";
 import ModalEditPost from "../modalEditPost/page";
 import ModalChat from "../modalChat/page";
+import { PlanComponent } from "../planComponent";
+import { planFood } from "@/service/requests/Plan";
+
+export type DateToPlanFood = {
+  date: string;
+  plan: planFood[];
+};
 
 export default function ProfileComponent() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -51,6 +58,8 @@ export default function ProfileComponent() {
   const [followers, setFollowers] = useState(profile?.followers ?? 0);
   const [markedPictures, setMarkedPicture] = useState<picture[]>([]);
   const [markedFinded, setMarkedFinded] = useState(false);
+  const [planLoad, setPlanLoad] = useState<boolean>(false);
+  const [planFinded, setPlanFinded] = useState<DateToPlanFood[]>([]);
   const [name, setName] = useState("");
   const [img, setImg] = useState("");
   const [username, setUsername] = useState("");
@@ -235,6 +244,7 @@ export default function ProfileComponent() {
     setMarkedPicture([]);
     setMarkedFinded(false);
     setPageOnProfile(1);
+    setPlanFinded([]);
   }, [searchParams]);
 
   async function openMarked() {
@@ -257,9 +267,10 @@ export default function ProfileComponent() {
   }
 
   function openPlaning() {
-    showAlert("Função em desenvolvimento", "info");
-    // setLoadContent(false);
-    // setPageOnProfile(3);
+    if (!planFinded) {
+    }
+    setLoadContent(true);
+    setPageOnProfile(3);
   }
 
   function openPictures() {
@@ -407,6 +418,7 @@ export default function ProfileComponent() {
             ) : (
               <></>
             )}
+            {pageOnProfile == 3 ? <PlanComponent planFinded={planFinded} setPlanFinded={setPlanFinded} username={username} isMyProfile={isMyProfile} /> : <></>}
           </ProfileShowContainer>
           {editProfile ? (
             <input type="file" ref={inputRef} onChange={fileSended} style={{ display: "none" }} accept="image/png, image/jpeg, image/gif, image/jpg" />

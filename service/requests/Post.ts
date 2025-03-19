@@ -109,7 +109,7 @@ export async function removeMyPost(id: string) {
     };
   }
 
-  return await ApiService.delete(RoutesAPI.removeMyPost + id, {}, { Authorization: apiKey });
+  return await ApiService.get(RoutesAPI.removeMyPost + id, {}, { Authorization: apiKey });
 }
 
 export async function updatePost(data: updatePost, idPost: string) {

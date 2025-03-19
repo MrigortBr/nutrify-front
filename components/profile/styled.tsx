@@ -245,6 +245,7 @@ export const ProfileTypeContainer = styled.nav<{ $marker: number }>`
   }
 `;
 
+//TODO Arrumar barrinha para funcionar em todas as resoluções
 export const ProfileTypeItemIconAndText = styled.span`
   width: fit-content;
   height: 100%;

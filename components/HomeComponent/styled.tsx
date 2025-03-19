@@ -9,6 +9,16 @@ export const PostsContainer = styled.div`
   overflow-y: auto;
   height: 100vh;
   width: 85vw;
+
+  @media (max-width: 768px) {
+    width: 100vw;
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    flex-direction: inherit;
+    flex-wrap: wrap;
+    padding: 0;
+  }
 `;
 
 export const PostContainer = styled.div`
@@ -18,6 +28,15 @@ export const PostContainer = styled.div`
   padding-bottom: 1%;
   width: 50vw;
   margin: 2vh auto;
+
+  @media (max-width: 768px) {
+    width: 95vw;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 export const PostPicture = styled.div`
@@ -41,6 +60,11 @@ export const PostPictureImg = styled.img`
   height: 70vh;
   object-fit: cover;
   margin: auto;
+  width: 100%;
+
+  @media (max-width: 768px) {
+    width: 95vw;
+  }
 `;
 
 export const PostActions = styled.div`
@@ -170,6 +194,11 @@ export const PostComment = styled.input`
   &::placeholder {
     color: #01381e;
   }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    font-size: calc((var(--px) * 26) * 4);
+  }
 `;
 
 export const PostCommentSpan = styled.span`
@@ -253,6 +282,11 @@ export const PostHeader = styled.div`
   height: 75%;
   width: 100%;
   margin-top: auto;
+  height: 5vh;
+
+  @media (max-width: 768px) {
+    height: 10vh;
+  }
 `;
 
 export const PostPictureSpan = styled.span`
@@ -283,4 +317,8 @@ export const PostUsername = styled.p`
   font-size: calc(var(--px) * 30);
   margin: auto 1%;
   color: ${(props) => props.theme.palette.primary.contrastText};
+
+  @media (max-width: 768px) {
+    font-size: calc((var(--px) * 30) * 4);
+  }
 `;

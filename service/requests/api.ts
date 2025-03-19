@@ -46,7 +46,7 @@ class AppService {
   }
 
   async delete<T>(url: string, params?: object, headers?: HeaderRequest): Promise<ApiResponse<dataResponse>> {
-    return this.ThenCatch(this.api.get(url, { params, headers }));
+    return this.ThenCatch(this.api.delete(url, { params, headers }));
   }
 
   private ThenCatch(res: Promise<AxiosResponse<dataResponse, dataResponse>>) {

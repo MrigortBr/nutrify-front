@@ -22,6 +22,11 @@ export enum RoutesAPI {
   marked = "/marked/",
   foryou = "/home/foryou",
   getComments = "/comment/",
+  planInsert = "/plan",
+  planEdit = "/plan",
+  planDelete = "/plan/",
+  planList = "/plan/",
+  planMarked = "/plan/",
 }
 
 export enum Routes {

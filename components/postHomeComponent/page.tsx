@@ -126,7 +126,7 @@ export default function PostHomeComponent(prop: Props) {
 
   return (
     <PostContainer key={prop.index}>
-      <PostHeader style={{ height: "5vh" }} onClick={() => router.push(Routes.profile + `?u=${prop.post.username}`)}>
+      <PostHeader onClick={() => router.push(Routes.profile + `?u=${prop.post.username}`)}>
         <PostPictureSpan>
           <PostPictureUser src={prop.post.pictureUser || "/png/remo.jpg"} />
         </PostPictureSpan>
@@ -161,7 +161,7 @@ export default function PostHomeComponent(prop: Props) {
               {prop.post.commentsnumber > 0 ? (
                 <PostComments onClick={openComments}>Ver todos os {prop.post.commentsnumber} comentários</PostComments>
               ) : (
-                <PostComments style={{ opacity: 0 }}> .</PostComments>
+                <PostComments> Sem comentarios.</PostComments>
               )}
             </>
           ) : (

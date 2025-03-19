@@ -6,6 +6,7 @@ import {
   ComponentText,
   ImageMenu,
   LogoMenu,
+  MenuButton,
   MenuComponent,
   MenuContainer,
   TextLogoMenu,
@@ -39,6 +40,7 @@ export default function Index() {
   const [load, setLoad] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
+
   useEffect(() => {
     const getSimpleMenu = async () => {
       let simpleProfile: simpleProfile | undefined;
@@ -86,6 +88,7 @@ export default function Index() {
   }
 
   function signOut() {
+    socket.disconnect();
     localStorage.removeItem("simpleProfile");
     localStorage.removeItem("token");
     router.push(Routes.login);
