@@ -216,6 +216,24 @@ export const ChatMessagesClose = styled.img`
   }
 `;
 
+export const ChatMessagesFinish = styled.div`
+  margin: auto;
+  margin-right: 2%;
+  height: 60%;
+  transition: 300ms;
+  background-color: red;
+  border-radius: 20px;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  padding: 0 2%;
+
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+  }
+`;
+
 export const ChatMessagesName = styled.span`
   font-size: calc(var(--px) * 26);
   margin-left: 2%;
@@ -467,4 +485,96 @@ export const NoChatToMessage = styled.h1`
   font-size: calc(var(--px) * 18);
   font-weight: lighter;
   margin-top: 50%;
+`;
+
+export const FinishedContainer = styled.div`
+  width: 80%;
+  height: 60%;
+  background-color: blue;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  color: black;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+  border-radius: 20px;
+  position: absolute;
+  z-index: 5;
+  left: 10%;
+  top: 20%;
+
+  &::after {
+    width: 125%;
+    height: 167%;
+    background-color: rgba(0, 0, 0, 0.4);
+    content: "";
+    top: -33.1%;
+    left: -12.5%;
+    position: absolute;
+    z-index: 0; /* Tente valores diferentes para ver o efeito */
+  }
+
+  & > span > h1 {
+    text-align: center;
+    margin: auto;
+    z-index: 5;
+  }
+
+  & > span > p {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-size: calc(var(--px) * 24);
+    z-index: 5;
+  }
+
+  & > span > textarea {
+    width: 80%;
+    height: 40%;
+    margin: auto;
+    margin-left: 10%;
+    font-size: calc(var(--px) * 22);
+    background-color: transparent;
+    border: 1px solid black;
+    border-radius: 20px;
+    padding: 1%;
+    resize: none;
+    color: black;
+    margin-top: 2%;
+    z-index: 5;
+  }
+
+  & > span > button {
+    width: fit-content;
+    font-size: calc(var(--px) * 24);
+
+    margin: auto;
+    background-color: ${(props) => props.theme.palette.primary.light};
+    border-radius: 20px;
+    padding: 2% 10%;
+    border: 0;
+    margin-top: 2%;
+    z-index: 5;
+    transition: 500ms;
+    cursor: pointer;
+  }
+
+  & > span > button:hover {
+    transform: scaleX(1.1);
+  }
+
+  & > span {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    color: black;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    position: relative;
+    z-index: 5;
+  }
 `;

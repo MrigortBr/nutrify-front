@@ -2,6 +2,7 @@
 export enum RoutesAPI {
   login = "/user/login",
   register = "/user/register",
+  registerNutri = "/user/register/nutri",
   requestReset = "/reset/request",
   resetPWD = "/reset/",
   about = "/",
@@ -27,6 +28,20 @@ export enum RoutesAPI {
   planDelete = "/plan/",
   planList = "/plan/",
   planMarked = "/plan/",
+  getHours = "/hours/",
+  createHours = "/hours/",
+  deleteHours = "/hours/",
+  updateHours = "/hours/",
+  listSimpleNutri = "/nutri/",
+  markHour = "/nutri/mark",
+  getServices = "/nutri/services",
+  getServicesNutri = "/nutri/myServices",
+  GetRevenues = "/revenue/",
+  getRevenueUser = "/revenue/user/",
+  deleteRevenue = "/revenue/",
+  updateRevenue = "/revenue/",
+  createRevenue = "/revenue/",
+  createRevenueUser = "/revenue/user/",
 }
 
 export enum Routes {
@@ -35,4 +50,5 @@ export enum Routes {
   register = "/register",
   profile = "/profile",
   post = "/post?id=",
+  nutri = "/nutri",
 }

@@ -1,4 +1,4 @@
-import { metadata } from "../layout";
+import { metadata } from "@/app/layout";
 import LayoutBody from "@/components/LayoutBody/page";
 import RegisterNutritionist from "@/components/registerNutritionist/page";
 

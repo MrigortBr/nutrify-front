@@ -3,14 +3,12 @@ import { useState } from "react";
 import { ConatinerLogin, DivLogin, InputText, Logo, SpanInputText, TextLogin, CreateAccount, LineWidget, LoginWithGoogle, LogoGoogle } from "../login/styles";
 import { showAlert } from "../alert/page";
 import PwdComponent from "../formComponents/passwordField";
-import { registerAPI } from "@/service/requests/authenticate";
+import { CRN, registerAPI, registerNutriAPI } from "@/service/requests/authenticate";
 import FormButton from "../formComponents/formButton";
 import { validateFormRegister } from "@/service/validateFields";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/enum/Routes";
 import { DataListRegister, SpanInputTextDouble } from "./styled";
-
-type CRN = "CRN-1" | "CRN-2" | "CRN-3" | "CRN-4" | "CRN-5" | "CRN-6" | "CRN-7" | "CRN-8" | "CRN-9" | "CRN-10" | "CRN-11";
 
 const crnList: CRN[] = [
   "CRN-1", // São Paulo
@@ -41,7 +39,7 @@ export default function RegisterNutritionist() {
     if (sending == "sending") return;
     if (!validateFormRegister(name, email, confirmEmail, password)) return;
     setSending("sending");
-    const result = await registerAPI({ name, email, password });
+    const result = await registerNutriAPI({ name, email, password, typeCRN, crn: numberCRN });
     setSending("free");
     showAlert(result.data?.message || "", result.success ? "success" : "error");
 

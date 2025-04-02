@@ -346,9 +346,7 @@ export default function ProfileComponent() {
             ) : (
               <UserBio>{bio != undefined ? bio : "Nada a informar"}</UserBio>
             )}
-            <UserRec>
-              Seguido(a) por&nbsp;<b>{" @"}fulano</b>,&nbsp;<b>cicrano</b>&nbsp;e outras 15 pessoas (Static)
-            </UserRec>
+            <UserRec>{/* Seguido(a) por&nbsp;<b>{" @"}fulano</b>,&nbsp;<b>cicrano</b>&nbsp;e outras 15 pessoas (Static) */}</UserRec>
           </ProfileInfoContainer>
           <ProfileShowContainer>
             <ProfileTypeContainer $marker={pageOnProfile}>

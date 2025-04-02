@@ -5,7 +5,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Alert } from "@mui/material";
 import { CheckCircleTwoTone } from "@mui/icons-material";
 
-export function showAlert(message: string, severity: "success" | "error" | "info" | "warning") {
+export type Severity = "success" | "error" | "info" | "warning";
+
+export function showAlert(message: string, severity: Severity) {
   const alertContainer = document.getElementById("alert-container");
 
   if (!alertContainer) {

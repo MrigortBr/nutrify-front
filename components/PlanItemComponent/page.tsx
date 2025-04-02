@@ -26,6 +26,7 @@ export default function PlanItemComponent(prop: {
   cancelNew: () => void;
   update: (plan: planFood) => void;
   deletePlan: (id: number) => void;
+  type?: number;
 }) {
   const [marked, setMarked] = useState(prop.plan.marked);
   const [showRecipe, setShowRecipe] = useState(false);

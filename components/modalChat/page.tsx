@@ -32,6 +32,8 @@ import { socket } from "../menu/page";
 import { dataHistory } from "@/service/socket/types";
 import LoadingSpinner from "../LoadingSpinner/page";
 import { showAlert } from "../alert/page";
+import { getServices, NutriLast, NutriOpen } from "@/service/requests/Nutri";
+import ChatNutriComponent from "./ChatNutri";
 
 type UsersChats = {
   message: string;
@@ -61,7 +63,11 @@ export default function ModalChat(props: Props) {
   const [changeInput, setChangeInput] = useState<NodeJS.Timeout>();
   const [digit, setDigit] = useState<boolean>(false);
   const [chatSelected, setChatSelected] = useState<boolean>(false);
+  const [chatTypeSelected, setChatTypeSelected] = useState<"nutri" | "friends">("friends");
+  const [openSelected, setOpenSelected] = useState<NutriOpen>();
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const [last, setLast] = useState<NutriOpen[]>([]);
+  const [open, setOpen] = useState<NutriOpen[]>([]);
 
   function close() {
     if (props.closeCall) {
@@ -69,6 +75,20 @@ export default function ModalChat(props: Props) {
     }
 
     openModal(<></>);
+  }
+
+  async function getDataNutri() {
+    const data = await getServices();
+
+    if (!data.success) showAlert(data.data?.message ?? "", "error");
+
+    if (data.data?.servicesLast) {
+      setLast(data.data?.servicesLast);
+    }
+
+    if (data.data?.servicesOpen) {
+      setOpen(data.data.servicesOpen);
+    }
   }
 
   const scrollToBottom = () => {
@@ -293,88 +313,170 @@ export default function ModalChat(props: Props) {
           <ChatLeft key={"ChatLeft"}>
             <TypeChat $type={typeChat}>
               <p className="friends" onClick={() => setTypeChat("friends")}>
-                Amigos
+                Pessoal
               </p>
               <p
                 className="nutri"
                 onClick={() => {
                   setTypeChat("nutri");
-                  showAlert("Função em desenvolvimento", "info");
+                  getDataNutri();
                 }}
               >
                 Nutricional
               </p>
             </TypeChat>
-            {chatUsers.map((v, index) => (
-              <Chat onClick={() => openChat(v.user.username, v.user.picture, v.noRead)} key={v.user.username}>
-                <ChatImgContainer>
-                  <ChatImgBackground>
-                    <ChatImg src={v.user.picture == null ? "/png/remo.jpg" : v.user.picture}></ChatImg>
-                  </ChatImgBackground>
-                </ChatImgContainer>
-                <ChatName>
-                  {v.user.username}
-                  {v.noRead > 0 ? <span>{v.noRead}</span> : <></>}
-                </ChatName>
-                <LastMessage>
-                  <p className="message">{v.message}</p>
-                  <p className="hour">{new Date(v.created_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false })}</p>
-                </LastMessage>
-              </Chat>
-            ))}
+            {typeChat == "friends" ? (
+              <>
+                {chatUsers.map((v, index) => (
+                  <Chat
+                    onClick={() => {
+                      setChatTypeSelected("friends");
+                      openChat(v.user.username, v.user.picture, v.noRead);
+                    }}
+                    key={v.user.username}
+                  >
+                    <ChatImgContainer>
+                      <ChatImgBackground>
+                        <ChatImg src={v.user.picture == null ? "/png/remo.jpg" : v.user.picture}></ChatImg>
+                      </ChatImgBackground>
+                    </ChatImgContainer>
+                    <ChatName>
+                      {v.user.username}
+                      {v.noRead > 0 ? <span>{v.noRead}</span> : <></>}
+                    </ChatName>
+                    <LastMessage>
+                      <p className="message">{v.message}</p>
+                      <p className="hour">{new Date(v.created_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false })}</p>
+                    </LastMessage>
+                  </Chat>
+                ))}
 
-            {chatUsers.length == 0 ? <NoChatToMessage>Sem conversas</NoChatToMessage> : <></>}
+                {chatUsers.length == 0 ? <NoChatToMessage>Sem conversas</NoChatToMessage> : <></>}
+              </>
+            ) : (
+              <>
+                {open.map((v, i) => (
+                  <Chat
+                    key={i}
+                    onClick={() => {
+                      setChatSelected(true);
+                      setChatTypeSelected("nutri");
+                      setOpenSelected(v);
+                    }}
+                  >
+                    <ChatImgContainer>
+                      <ChatImgBackground>
+                        <ChatImg src={v.picture == null ? "/png/remo.jpg" : v.picture}></ChatImg>
+                      </ChatImgBackground>
+                    </ChatImgContainer>
+                    <ChatName>{v.name}</ChatName>
+                    <LastMessage>
+                      <p className="message">
+                        Consulta: {new Date(v.service_init).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })} -{" "}
+                        {new Date(v.service_final).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
+                      </p>
+                    </LastMessage>
+                  </Chat>
+                ))}
+
+                {last.map((v, i) => (
+                  <Chat
+                    key={i}
+                    onClick={() => {
+                      setChatSelected(true);
+                      setChatTypeSelected("nutri");
+                      setOpenSelected(v);
+                    }}
+                  >
+                    <ChatImgContainer>
+                      <ChatImgBackground>
+                        <ChatImg src={v.picture == null ? "/png/remo.jpg" : v.picture}></ChatImg>
+                      </ChatImgBackground>
+                    </ChatImgContainer>
+                    <ChatName>{v.name}</ChatName>
+                    <LastMessage>
+                      <p className="message">
+                        Consulta: {new Date(v.service_init).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })} -{" "}
+                        {new Date(v.service_final).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
+                      </p>
+                    </LastMessage>
+                  </Chat>
+                ))}
+
+                {open.length == 0 && last.length == 0 ? <NoChatToMessage>Sem conversas</NoChatToMessage> : <>{open.length}</>}
+              </>
+            )}
           </ChatLeft>
           {!loadChat ? (
             <>
               {chatSelected ? (
-                <ChatMessages>
-                  <ChatMessagesHeader>
-                    <ChatMessagesImg>
-                      <ChatImg src={picture ?? "/png/remo.jpg"}></ChatImg>
-                    </ChatMessagesImg>
-                    <ChatMessagesName>
-                      <p className="nameUser"> {username}</p>
-                      <p className="status">{isOnline ? "Online" : "Offline"}</p>
-                    </ChatMessagesName>
-                    <ChatMessagesClose src="/icons/close.svg" />
-                  </ChatMessagesHeader>
-                  <ChatMessagesContainer ref={chatContainerRef} key={"chatMessagesConatiner"}>
-                    {history.map((value, index) =>
-                      !value.mymessage ? (
-                        <MessageRecived key={index}>
-                          <p className="message">{value.message}</p>
-                          <p className="hour">
-                            {new Date(value.created_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false })}
-                          </p>
-                        </MessageRecived>
+                <>
+                  {chatTypeSelected == "friends" ? (
+                    <ChatMessages>
+                      <ChatMessagesHeader>
+                        <ChatMessagesImg>
+                          <ChatImg src={picture ?? "/png/remo.jpg"}></ChatImg>
+                        </ChatMessagesImg>
+                        <ChatMessagesName>
+                          <p className="nameUser"> {username}</p>
+                          <p className="status">{isOnline ? "Online" : "Offline"}</p>
+                        </ChatMessagesName>
+                        <ChatMessagesClose src="/icons/close.svg" />
+                      </ChatMessagesHeader>
+                      <ChatMessagesContainer ref={chatContainerRef} key={"chatMessagesConatiner"}>
+                        {history.map((value, index) =>
+                          !value.mymessage ? (
+                            <MessageRecived key={index}>
+                              <p className="message">{value.message}</p>
+                              <p className="hour">
+                                {new Date(value.created_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false })}
+                              </p>
+                            </MessageRecived>
+                          ) : (
+                            <MessageSended key={index}>
+                              <p className="message">{value.message}</p>
+                              <p className="hour">
+                                {new Date(value.created_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false })}
+                              </p>
+                            </MessageSended>
+                          )
+                        )}
+                      </ChatMessagesContainer>
+                      <ChatInputs>
+                        <TextareaContainer value={message} onChange={onChangeTextArea} onKeyDown={onKey}></TextareaContainer>
+                        <button onClick={SendMessage}>
+                          <MySvg src="icons/send.svg"></MySvg>
+                        </button>
+                      </ChatInputs>
+                      {digit ? (
+                        <ChatDigit>
+                          <p className="text">Digitando </p>
+                          <p className="dot1 dot">.</p>
+                          <p className="dot2 dot">.</p>
+                          <p className="dot3 dot">.</p>
+                        </ChatDigit>
                       ) : (
-                        <MessageSended key={index}>
-                          <p className="message">{value.message}</p>
-                          <p className="hour">
-                            {new Date(value.created_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false })}
-                          </p>
-                        </MessageSended>
-                      )
-                    )}
-                  </ChatMessagesContainer>
-                  <ChatInputs>
-                    <TextareaContainer value={message} onChange={onChangeTextArea} onKeyDown={onKey}></TextareaContainer>
-                    <button onClick={SendMessage}>
-                      <MySvg src="icons/send.svg"></MySvg>
-                    </button>
-                  </ChatInputs>
-                  {digit ? (
-                    <ChatDigit>
-                      <p className="text">Digitando </p>
-                      <p className="dot1 dot">.</p>
-                      <p className="dot2 dot">.</p>
-                      <p className="dot3 dot">.</p>
-                    </ChatDigit>
+                        <></>
+                      )}
+                    </ChatMessages>
                   ) : (
-                    <></>
+                    <>
+                      {openSelected ? (
+                        <ChatNutriComponent
+                          finished={openSelected.finished}
+                          type="user"
+                          id={openSelected.id}
+                          name={openSelected?.name}
+                          nutriId={openSelected?.nutri_id}
+                          picture={openSelected?.picture}
+                          close={openSelected.rating}
+                        />
+                      ) : (
+                        <></>
+                      )}
+                    </>
                   )}
-                </ChatMessages>
+                </>
               ) : (
                 <NoChatSelected>
                   <h1>Selecione um usuario para começar a conversa</h1>

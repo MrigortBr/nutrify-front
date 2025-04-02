@@ -79,6 +79,8 @@ export default function Index() {
   function detectPathName() {
     if (pathname == "/home") {
       setUsePage(".house.");
+    } else if (pathname == "/nutri") {
+      setUsePage(".nutri.");
     }
   }
 
@@ -142,6 +144,17 @@ export default function Index() {
       </MenuComponent>
 
       <MenuComponent
+        $select={usePage.search(".nutri.") != -1 ? true : false}
+        onClick={() => {
+          router.push(Routes.nutri);
+          setUsePage((e) => (e += ".nutri."));
+        }}
+      >
+        <ComponentIcon src="/icons/simbolo-de-nutricao-seeklogo.svg" />
+        <ComponentText>Nutriocionistas</ComponentText>
+      </MenuComponent>
+
+      <MenuComponent
         $select={usePage.search(".alert.") != -1 ? true : false}
         onClick={() => {
           showAlert("Função em desenvolvimento", "info");
@@ -184,7 +197,7 @@ export default function Index() {
         <ComponentText>Configurações</ComponentText>
       </MenuComponent>
 
-      <MenuComponent $select={usePage.search(".exit.") != -1 ? true : false} onClick={signOut} style={{ marginTop: "16vh" }}>
+      <MenuComponent $select={usePage.search(".exit.") != -1 ? true : false} onClick={signOut} style={{ marginTop: "5vh" }}>
         <ComponentIcon src="/icons/exit.svg" />
         <ComponentText>Sair</ComponentText>
       </MenuComponent>
