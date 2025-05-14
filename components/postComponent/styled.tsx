@@ -128,6 +128,7 @@ export const UserEdit = styled(UserMarked)`
 
 export const ImageMarked = styled.img`
   height: 100%;
+  aspect-ratio: 1/1;
   border-radius: 100%;
 `;
 

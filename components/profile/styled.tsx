@@ -351,6 +351,37 @@ export const PictureInfoSpanContent = styled.span`
   }
 `;
 
+export const PicutreInfoSpanContentEdit = styled.span`
+  display: grid;
+  grid-template-rows: 50% 50%;
+  width: 100%;
+  height: 100%;
+  align-items: start;
+  grid-column-start: 1;
+  grid-column-end: 3;
+  font-weight: 500;
+  margin-left: 5%;
+  margin-right: 5%;
+
+  & > span {
+    margin-top: auto;
+    height: 30%;
+  }
+
+  & > span > svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  & > p {
+    font-size: calc(var(--px) * 28);
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    user-select: none;
+  }
+`;
+
 export const UploadContainer = styled.span`
   position: absolute;
   background-color: rgba(0, 0, 0, 0.3);

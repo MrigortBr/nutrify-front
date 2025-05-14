@@ -176,3 +176,16 @@ export async function homeAPI(): Promise<ApiResponse<dataResponse & { simplePost
 
   return await ApiService.get(RoutesAPI.foryou, {}, { Authorization: apiKey });
 }
+
+export async function followAPI(): Promise<ApiResponse<dataResponse & { simplePost?: SimplePostNew[] }>> {
+  const apiKey = localStorage.getItem("token");
+
+  if (!apiKey) {
+    return {
+      success: false,
+      data: { message: "Você precisa estar autenticado para isso" },
+    };
+  }
+
+  return await ApiService.get(RoutesAPI.followHome, {}, { Authorization: apiKey });
+}

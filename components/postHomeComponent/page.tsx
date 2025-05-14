@@ -27,7 +27,6 @@ import { showAlert } from "../alert/page";
 import { simpleProfile } from "@/service/requests/profile";
 import { Routes } from "@/enum/Routes";
 import { useRouter } from "next/navigation";
-import LoadingSpinner from "../LoadingSpinner/page";
 
 type Props = {
   post: SimplePostNew;

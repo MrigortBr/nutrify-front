@@ -73,7 +73,7 @@ export async function getServices(): Promise<ApiResponse<NutriResponse>> {
   return await ApiService.get(RoutesAPI.getServices, {}, { Authorization: apiKey });
 }
 
-export async function getServicesNutri(): Promise<ApiResponse<NutriResponse>> {
+export async function getServicesNutri(date: string): Promise<ApiResponse<NutriResponse>> {
   const apiKey = localStorage.getItem("token");
 
   if (!apiKey) {
@@ -83,5 +83,5 @@ export async function getServicesNutri(): Promise<ApiResponse<NutriResponse>> {
     };
   }
 
-  return await ApiService.get(RoutesAPI.getServicesNutri, {}, { Authorization: apiKey });
+  return await ApiService.get(RoutesAPI.getServicesNutri + `?date=${date}`, {}, { Authorization: apiKey });
 }

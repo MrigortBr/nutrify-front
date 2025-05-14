@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { showAlert } from "../alert/page";
 import { openModal } from "../MyCustomModal/page";
 import HoursComponent from "../NutriConfigComponents/hours";
@@ -15,26 +15,19 @@ import {
   DeleteItem,
 } from "./styled";
 import MySvg from "../MySvg/page";
-import { createHours, deleteHours, getHours, updateHours } from "@/service/requests/Hours";
+import { createHours, deleteHours, getConfigNutri, getHours, updateConfigNutri, updateHours } from "@/service/requests/Hours";
 
-export type Consult = { id: number; init: number; final: number; state: boolean; hourInit: string; hourFinal: string };
+export type Consult = { id: number; init: number; final: number; state: boolean; hourInit: string; hourFinal: string; price: number };
 
 export function ConfigComponent() {
-  const [data, setData] = useState<Consult[]>([
-    {
-      id: 1,
-      init: 5,
-      final: 6,
-      hourInit: "06:00",
-      hourFinal: "05:00",
-      state: false,
-    },
-  ]);
+  const [data, setData] = useState<Consult[]>([]);
   const [dataDrag, setDataDrag] = useState<Consult>();
   const [editHours, setEditHours] = useState<boolean>(false);
   const [acceptAuto, setAcceptAuto] = useState<boolean>(false);
   const [acceptClients, setAcceptClients] = useState<boolean>(false);
+  const [myPrice, setMyPrice] = useState<number>(0);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
+  const [timeMoney, setTimeMoney] = useState<NodeJS.Timeout>();
 
   async function getData() {
     const r = await getHours(date);
@@ -48,7 +41,7 @@ export function ConfigComponent() {
       const newData: Consult[] = [];
 
       r.data.hours.forEach((v) => {
-        console.log(v.service_final);
+        console.log(v);
         const newInit = `${new Date(v.service_init).getHours().toString().padStart(2, "0")}:${new Date(v.service_init).getMinutes().toString().padStart(2, "0")}`;
         const newFinal = `${new Date(v.service_final).getHours().toString().padStart(2, "0")}:${new Date(v.service_final).getMinutes().toString().padStart(2, "0")}`;
 
@@ -59,6 +52,7 @@ export function ConfigComponent() {
           final: Number(newFinal.slice(0, 2)),
           init: Number(newInit.slice(0, 2)),
           state: v.void,
+          price: v.price,
         });
       });
 
@@ -73,6 +67,7 @@ export function ConfigComponent() {
       nutri_id: 0,
       void: false,
       id: 0,
+      price: newData.price,
     });
 
     if (!r.success) {
@@ -94,6 +89,7 @@ export function ConfigComponent() {
       nutri_id: 0,
       void: false,
       id: newData.id,
+      price: newData.price,
     });
 
     if (!r.success) {
@@ -118,8 +114,84 @@ export function ConfigComponent() {
     return new Date(year, month - 1, day, hours, minutes);
   };
 
+  async function getConfig() {
+    const r = await getConfigNutri();
+
+    if (!r.success) {
+      showAlert(r.data?.message ?? "Aconteceu um erro, tente atualizar a pagina!", "error");
+      return;
+    }
+
+    if (r.data) {
+      if (r.data.price) setMyPrice(r.data.price);
+      if (r.data.acceptClients) setAcceptClients(r.data.acceptClients);
+    }
+  }
+
+  async function updateConfig(type: "open" | "price", status: boolean, price?: number) {
+    if (type == "open") {
+      if (acceptClients == status) return;
+    }
+
+    const r = await updateConfigNutri(type == "price" ? price : undefined, type == "open" ? status : undefined);
+
+    if (!r.success) {
+      showAlert(r.data?.message ?? "Aconteceu um erro, tente atualizar a pagina!", "error");
+      return;
+    } else {
+      showAlert(r.data?.message ?? "Configurações atualizado!", "success");
+    }
+
+    if (type == "open") {
+      setAcceptClients(status);
+    } else {
+      setMyPrice(price ?? myPrice);
+    }
+  }
+
+  //TODO melhorar sistema de float
+  function parseMoneyInput(value: string | number): number {
+    let num = 0;
+
+    if (typeof value === "string") {
+      const normalized = value
+        .trim()
+        .replace(",", ".")
+        .replace(/[^0-9.]/g, "");
+      num = parseFloat(normalized);
+    } else {
+      num = value;
+    }
+
+    if (isNaN(num)) return 0;
+
+    // Garante que o número tenha duas casas decimais
+    return parseFloat(num.toFixed(2));
+  }
+
+  async function updateValue(event: ChangeEvent<HTMLInputElement>) {
+    const price = Number(event.currentTarget.value);
+    console.log(event.currentTarget.value);
+
+    try {
+      clearInterval(timeMoney);
+    } catch (error) {}
+
+    if (!Number.isNaN(price)) {
+      console.log(parseMoneyInput(price));
+      setMyPrice(parseMoneyInput(price));
+
+      setTimeMoney(
+        setTimeout(() => {
+          updateConfig("price", false, price);
+        }, 500)
+      );
+    }
+  }
+
   useEffect(() => {
     getData();
+    getConfig();
   }, [date]);
 
   useEffect(() => {
@@ -132,7 +204,7 @@ export function ConfigComponent() {
     setData(old);
   }
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
     if (dataDrag) {
       const oldD = data.find((v) => v.id == dataDrag.id);
 
@@ -145,23 +217,41 @@ export function ConfigComponent() {
 
       if (oldD) {
         const diffData = oldD.final - oldD.init;
-        oldD.init = Math.floor(diff / widthPerFr);
-        oldD.final = Math.floor(diff / widthPerFr) + diffData;
+
+        const updated = await updateData({
+          final: Math.floor(diff / widthPerFr) + diffData,
+          init: Math.floor(diff / widthPerFr),
+          id: oldD.id,
+          state: oldD.state,
+          hourFinal: `${(Math.floor(diff / widthPerFr) + diffData).toString().padStart(2, "0")}:${oldD.hourInit.slice(3)}`,
+          hourInit: `${Math.floor(diff / widthPerFr)
+            .toString()
+            .padStart(2, "0")}:${oldD.hourInit.slice(3)}`,
+          price: oldD.price,
+        });
+
+        if (updated) {
+          oldD.init = Math.floor(diff / widthPerFr);
+          oldD.hourInit = `${Math.floor(diff / widthPerFr)
+            .toString()
+            .padStart(2, "0")}:${oldD.hourInit.slice(3)}`;
+          oldD.final = Math.floor(diff / widthPerFr) + diffData;
+          oldD.hourFinal = `${(Math.floor(diff / widthPerFr) + diffData).toString().padStart(2, "0")}:${oldD.hourInit.slice(3)}`;
+          updateDataObj(dataDrag);
+        }
       }
-      updateDataObj(dataDrag);
     }
   };
 
   async function update(id: number, init: string, final: string) {
     const myData = data.find((e) => e.id == id);
-
     if (myData) {
+      myData.hourFinal = final;
+      myData.hourInit = init;
+      myData.init = Number(init.slice(0, 2));
+      myData.final = Number(final.slice(0, 2));
       const icanUpdate = await updateData(myData);
       if (icanUpdate) {
-        myData.hourFinal = final;
-        myData.hourInit = init;
-        myData.init = Number(init.slice(0, 2));
-        myData.final = Number(final.slice(0, 2));
         const old = data.filter((e) => e.id != myData.id);
         old.push(myData);
         setData(old);
@@ -198,7 +288,7 @@ export function ConfigComponent() {
     }
   }
 
-  async function create(id: number, init: string, final: string) {
+  async function create(id: number, init: string, final: string, price: number) {
     let newData: Consult = {
       id: 1,
       init: Number(init.slice(0, 2)),
@@ -206,6 +296,7 @@ export function ConfigComponent() {
       hourInit: init,
       hourFinal: final,
       state: true,
+      price: price,
     };
 
     newData = await addData(newData);
@@ -218,15 +309,24 @@ export function ConfigComponent() {
   return (
     <ConfigContainer>
       <ConfigHeader>
-        <ConfigMarker onClick={() => setAcceptAuto((o) => !o)}>
-          <p>Aceitar automaticamente: </p>
-          <ConfigMarkeritem $selected={acceptAuto}>Sim</ConfigMarkeritem>
-          <ConfigMarkeritem $selected={!acceptAuto}>Não</ConfigMarkeritem>
+        <ConfigMarker>
+          <p>Valor da hora: </p>
+          <input
+            type="number"
+            value={myPrice}
+            onChange={(e) => {
+              updateValue(e);
+            }}
+          />
         </ConfigMarker>
-        <ConfigMarker onClick={() => setAcceptClients((o) => !o)}>
+        <ConfigMarker>
           <p>Aceitando clientes: </p>
-          <ConfigMarkeritem $selected={acceptClients}>Sim</ConfigMarkeritem>
-          <ConfigMarkeritem $selected={!acceptClients}>Não</ConfigMarkeritem>
+          <ConfigMarkeritem $selected={acceptClients} onClick={() => updateConfig("open", true)}>
+            Sim
+          </ConfigMarkeritem>
+          <ConfigMarkeritem $selected={!acceptClients} onClick={() => updateConfig("open", false)}>
+            Não
+          </ConfigMarkeritem>
         </ConfigMarker>
       </ConfigHeader>
       <ConfigDate>
@@ -234,21 +334,12 @@ export function ConfigComponent() {
           <p>Data: </p>
           <input type="date" value={date} onChange={(e) => setDate(e.currentTarget.value)} />
         </ConfigDatePicker>
-        <ConfigDatePickerToModal
-          onClick={() => {
-            showAlert("Modo de edição de horarios habilitado", "info");
-            setEditHours((e) => !e);
-          }}
-        >
-          <p>{editHours ? "Editar horarios" : "Salvar edição"}</p>
-        </ConfigDatePickerToModal>
         {editHours ? (
           <></>
         ) : (
           <ConfigDatePickerToModal
-            style={{ marginLeft: "1vw" }}
             onClick={() => {
-              openModal(<HoursComponent hourFinal={"00:00"} hourInit={"00:00"} id={0} create={create} />);
+              openModal(<HoursComponent hourFinal={"00:00"} hourInit={"00:00"} id={0} price={myPrice} create={create} />);
             }}
           >
             <p>Criar novo horario</p>
@@ -261,10 +352,14 @@ export function ConfigComponent() {
             draggable={!editHours ? true : false}
             key={"hour" + index}
             onDragStart={() => setDataDrag(item)}
-            onDragEnd={() => setDataDrag(undefined)}
+            onDragEnd={() => {
+              setDataDrag(undefined);
+            }}
             onDoubleClick={() => {
               if (!editHours) {
-                openModal(<HoursComponent hourFinal={item.hourFinal} hourInit={item.hourInit} id={item.id} deleteItem={deleteItem} update={update} />);
+                openModal(
+                  <HoursComponent hourFinal={item.hourInit} hourInit={item.hourFinal} id={item.id} deleteItem={deleteItem} update={update} price={item.price} />
+                );
               }
             }}
             $init={item.init}

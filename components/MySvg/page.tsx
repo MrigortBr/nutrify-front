@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 
 export default function MySvg(props: { src: string }) {
   const [svgContent, setSvgContent] = useState("");
-
   useEffect(() => {
     fetch(props.src)
       .then((res) => res.text())

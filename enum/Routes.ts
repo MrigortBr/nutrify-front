@@ -21,7 +21,10 @@ export enum RoutesAPI {
   simplePost = "/post/s/",
   comment = "/comment/",
   marked = "/marked/",
+  unmarked = "/marked/",
   foryou = "/home/foryou",
+  followHome = "/home/follow",
+
   getComments = "/comment/",
   planInsert = "/plan",
   planEdit = "/plan",
@@ -29,6 +32,8 @@ export enum RoutesAPI {
   planList = "/plan/",
   planMarked = "/plan/",
   getHours = "/hours/",
+  overview = "/hours/overview/data",
+
   createHours = "/hours/",
   deleteHours = "/hours/",
   updateHours = "/hours/",
@@ -37,6 +42,9 @@ export enum RoutesAPI {
   getServices = "/nutri/services",
   getServicesNutri = "/nutri/myServices",
   GetRevenues = "/revenue/",
+  getConfig = "/nutri/configs",
+  updateConfigNutri = "/nutri/configs",
+
   getRevenueUser = "/revenue/user/",
   deleteRevenue = "/revenue/",
   updateRevenue = "/revenue/",

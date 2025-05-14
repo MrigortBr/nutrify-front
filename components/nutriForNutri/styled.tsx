@@ -279,6 +279,19 @@ export const ConfigMarker = styled.div`
   border-radius: 20px;
   position: relative;
   gap: 5px;
+
+  & > input {
+    color: black;
+    text-align: center;
+    background-color: transparent;
+    border: 0;
+    border-bottom: 1px solid black;
+    width: fit-content;
+  }
+
+  & > input:focus {
+    outline: 0;
+  }
 `;
 
 export const ConfigMarkeritem = styled.p<{ $selected: boolean }>`
@@ -291,13 +304,15 @@ export const ConfigMarkeritem = styled.p<{ $selected: boolean }>`
   cursor: pointer;
   &::after {
     position: absolute;
-    content: ${({ $selected }) => ($selected ? "''" : "")};
+    content: ${({ $selected }) => ($selected ? "''" : "''")};
+    opacity: ${({ $selected }) => ($selected ? 1 : 0)};
     width: 100%;
     height: 100%;
     left: 0;
     border-radius: 20px;
     position: absolute;
     z-index: -1;
+    transition: 500ms;
     background-color: ${(props) => props.theme.palette.primary.light};
   }
 `;
@@ -774,12 +789,12 @@ export const LeftService = styled.div`
   margin-right: 0;
 `;
 
-export const CenterService = styled.div`
+export const CenterService = styled.div<{ $grid: "yes" | "no" | "wait" }>`
   width: 70%;
   height: 100%;
   border-top-right-radius: 20px;
   border-bottom-right-radius: 20px;
-  display: grid;
+  display: ${({ $grid }) => ($grid == "wait" ? "flex" : "grid")};
   grid-template-columns: 90% 10%;
   grid-template-rows: 100%;
 

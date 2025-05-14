@@ -29,6 +29,7 @@ import CardNutri from "../CardNutri/page";
 import { getAllNutri, NutriSimple } from "@/service/requests/Nutri";
 import { showAlert } from "../alert/page";
 import { formatCurrency } from "@/service/formatCurrency";
+import LoadingSpinner from "../LoadingSpinner/page";
 
 export const bestNutriData: NutriSimple[] = [
   { name: "Igor", picture: "", number_service: 5, nutri_id: 0, price: 100, rating: 5 },
@@ -40,6 +41,7 @@ export default function NutriComponent() {
   const [bestNutri, setBestNutri] = useState<NutriSimple[]>([]);
   const [nutri, SetNutri] = useState<NutriSimple[]>([]);
   const [showFilter, setShowFilter] = useState(false);
+  const [load, setLoad] = useState(true);
 
   async function getData() {
     const data = await getAllNutri();
@@ -51,6 +53,7 @@ export default function NutriComponent() {
       setBestNutri(top3Nutris);
 
       SetNutri(data.data.nutriSimple);
+      setLoad(false);
     }
   }
 
@@ -60,95 +63,110 @@ export default function NutriComponent() {
 
   return (
     <NutriPage>
-      <BestNutri>
-        {bestNutri[2] ? (
-          <ThreeNutri onClick={() => openModal(<CardNutri value={bestNutri[2]} />)}>
-            <BestNutriPicture src={bestNutri[2].picture ?? "/png/remo.jpg"} />
-            <BestNutriName>{bestNutri[2].name}</BestNutriName>
-            <BestNutriStars>
-              <span>
-                <Rating name="half-rating" defaultValue={bestNutri[2].rating ?? 0} precision={0.5} readOnly />
-              </span>
-              <p>Avaliação: {bestNutri[2].rating.toString().slice(0, 4)} / 5</p>
-            </BestNutriStars>
-          </ThreeNutri>
-        ) : (
-          <></>
-        )}
-        {bestNutri[0] ? (
-          <OneNutri onClick={() => openModal(<CardNutri value={bestNutri[0]} />)}>
-            <BestNutriPicture src={bestNutri[0].picture ?? "/png/remo.jpg"} />
-            <BestNutriName>{bestNutri[0].name}</BestNutriName>
-            <BestNutriStars>
-              <span>
-                <Rating name="half-rating" defaultValue={bestNutri[0].rating ?? 0} precision={0.5} readOnly />
-              </span>
-              <p>Avaliação: {bestNutri[0].rating.toString().slice(0, 4)} / 5</p>
-            </BestNutriStars>
-          </OneNutri>
-        ) : (
-          <></>
-        )}
-        {bestNutri[1] ? (
-          <TwoNutri onClick={() => openModal(<CardNutri value={bestNutri[1]} />)}>
-            <BestNutriPicture src={bestNutri[1].picture ?? "/png/remo.jpg"} />
-            <BestNutriName>{bestNutri[1].name}</BestNutriName>
-            <BestNutriStars>
-              <span>
-                <Rating name="half-rating" defaultValue={bestNutri[1].rating ?? 0} precision={0.5} readOnly />
-              </span>
-              <p>Avaliação: {bestNutri[1].rating.toString().slice(0, 4)} / 5</p>
-            </BestNutriStars>
-          </TwoNutri>
-        ) : (
-          <></>
-        )}
-      </BestNutri>
-      <ExploreTitle>Descobrir </ExploreTitle>
+      {load ? (
+        <LoadingSpinner
+          text={[
+            "Buscando nutricionistas",
+            "Analisando melhor preços",
+            "Carregando avaliacoes",
+            "Carregando comentarios",
+            "Atualizando informações",
+            "Verificando conexões",
+          ]}
+        />
+      ) : (
+        <>
+          <BestNutri>
+            {bestNutri[2] ? (
+              <ThreeNutri onClick={() => openModal(<CardNutri value={bestNutri[2]} />)}>
+                <BestNutriPicture src={bestNutri[2].picture ?? "/png/remo.jpg"} />
+                <BestNutriName>{bestNutri[2].name}</BestNutriName>
+                <BestNutriStars>
+                  <span>
+                    <Rating name="half-rating" defaultValue={bestNutri[2].rating ?? 0} precision={0.5} readOnly />
+                  </span>
+                  <p>Avaliação: {bestNutri[2].rating.toString().slice(0, 4)} / 5</p>
+                </BestNutriStars>
+              </ThreeNutri>
+            ) : (
+              <></>
+            )}
+            {bestNutri[0] ? (
+              <OneNutri onClick={() => openModal(<CardNutri value={bestNutri[0]} />)}>
+                <BestNutriPicture src={bestNutri[0].picture ?? "/png/remo.jpg"} />
+                <BestNutriName>{bestNutri[0].name}</BestNutriName>
+                <BestNutriStars>
+                  <span>
+                    <Rating name="half-rating" defaultValue={bestNutri[0].rating ?? 0} precision={0.5} readOnly />
+                  </span>
+                  <p>Avaliação: {bestNutri[0].rating.toString().slice(0, 4)} / 5</p>
+                </BestNutriStars>
+              </OneNutri>
+            ) : (
+              <></>
+            )}
+            {bestNutri[1] ? (
+              <TwoNutri onClick={() => openModal(<CardNutri value={bestNutri[1]} />)}>
+                <BestNutriPicture src={bestNutri[1].picture ?? "/png/remo.jpg"} />
+                <BestNutriName>{bestNutri[1].name}</BestNutriName>
+                <BestNutriStars>
+                  <span>
+                    <Rating name="half-rating" defaultValue={bestNutri[1].rating ?? 0} precision={0.5} readOnly />
+                  </span>
+                  <p>Avaliação: {bestNutri[1].rating.toString().slice(0, 4)} / 5</p>
+                </BestNutriStars>
+              </TwoNutri>
+            ) : (
+              <></>
+            )}
+          </BestNutri>
+          <ExploreTitle>Descobrir </ExploreTitle>
 
-      {/* <ExploreNutri>
-        <input type="text" placeholder="Fazer busca" />
-        <button onClick={() => setShowFilter((o) => !o)}>
-          Filtrar por
-          <MySvg src="/icons/filter.svg" />
-        </button>
-        {showFilter ? (
-          <ExploreFilter>
-            <ExploreFilterField>
-              Atendimentos: <input type="number" placeholder="De" /> - <input type="text" placeholder="Até" />
-            </ExploreFilterField>
-            <ExploreFilterFieldTwo>
-              <p>Avaliações:</p>
-              <span>
-                <Rating name="half-rating" defaultValue={0} precision={0.5} />
-              </span>
-            </ExploreFilterFieldTwo>
-            <ExploreFilterField>
-              Preço: <input type="number" placeholder="De" /> - <input type="text" placeholder="Até" />
-            </ExploreFilterField>
-          </ExploreFilter>
-        ) : (
-          <></>
-        )}
-      </ExploreNutri> */}
+          {/* <ExploreNutri>
+            <input type="text" placeholder="Fazer busca" />
+            <button onClick={() => setShowFilter((o) => !o)}>
+              Filtrar por
+              <MySvg src="/icons/filter.svg" />
+            </button>
+            {showFilter ? (
+              <ExploreFilter>
+                <ExploreFilterField>
+                  Atendimentos: <input type="number" placeholder="De" /> - <input type="text" placeholder="Até" />
+                </ExploreFilterField>
+                <ExploreFilterFieldTwo>
+                  <p>Avaliações:</p>
+                  <span>
+                    <Rating name="half-rating" defaultValue={0} precision={0.5} />
+                  </span>
+                </ExploreFilterFieldTwo>
+                <ExploreFilterField>
+                  Preço: <input type="number" placeholder="De" /> - <input type="text" placeholder="Até" />
+                </ExploreFilterField>
+              </ExploreFilter>
+            ) : (
+              <></>
+            )}
+          </ExploreNutri> */}
 
-      <ResultsExplore>
-        {nutri.map((v, i) => (
-          <NutriExplore key={i}>
-            <NutriExplorePicture src={v.picture ?? "/png/remo.jpg"} />
-            <NutriExploreName>{v.name}</NutriExploreName>
-            <NutriInfo>
-              <p>Atendimentos: {v.number_service}</p>
-              <p>Preço por hora: {formatCurrency(v.price)}</p>
-              <span>
-                Nota:
-                <Rating name="half-rating" value={v.rating} precision={0.5} readOnly />
-              </span>
-            </NutriInfo>
-            <NutriMore onClick={() => openModal(<CardNutri value={v} />)}>Ver Nutricionista</NutriMore>
-          </NutriExplore>
-        ))}
-      </ResultsExplore>
+          <ResultsExplore>
+            {nutri.map((v, i) => (
+              <NutriExplore key={i}>
+                <NutriExplorePicture src={v.picture ?? "/png/remo.jpg"} />
+                <NutriExploreName>{v.name}</NutriExploreName>
+                <NutriInfo>
+                  <p>Atendimentos: {v.number_service}</p>
+                  <p>Preço por hora: {formatCurrency(v.price)}</p>
+                  <span>
+                    Nota:
+                    <Rating name="half-rating" value={v.rating} precision={0.5} readOnly />
+                  </span>
+                </NutriInfo>
+                <NutriMore onClick={() => openModal(<CardNutri value={v} />)}>Ver Nutricionista</NutriMore>
+              </NutriExplore>
+            ))}
+          </ResultsExplore>
+        </>
+      )}
     </NutriPage>
   );
 }

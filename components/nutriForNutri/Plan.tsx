@@ -85,16 +85,6 @@ export default function PlanComponent() {
           {revenue.length == 0 && !newRevenue ? <h3 style={{ margin: "auto" }}>Sem Receitas, clique no botão criar nova receita</h3> : <></>}
         </RevenueContent>
       </RevenuesConatiner>
-      <RevenuesConatiner>
-        <RevenuesHeader>
-          <h1>Listas criadas</h1>
-          <select name="" id="">
-            <option value="x">Criar nova lista</option>
-            <option value="x">Lista X</option>
-          </select>
-        </RevenuesHeader>
-        <RevenueContent></RevenueContent>
-      </RevenuesConatiner>
     </PlanContainer>
   );
 }

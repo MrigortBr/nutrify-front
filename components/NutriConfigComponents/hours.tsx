@@ -89,12 +89,14 @@ export default function HoursComponent(prop: {
   hourInit: string;
   hourFinal: string;
   id: number;
+  price: number;
   deleteItem?: (id: number) => void;
-  update?: (id: number, init: string, final: string) => void;
-  create?: (id: number, init: string, final: string) => void;
+  update?: (id: number, init: string, final: string, value: number) => void;
+  create?: (id: number, init: string, final: string, value: number) => void;
 }) {
   const [init, setInit] = useState(prop.hourFinal);
   const [final, setFinal] = useState(prop.hourInit);
+  const [price, setPrice] = useState(prop.price);
 
   return (
     <HourContainer>
@@ -107,12 +109,16 @@ export default function HoursComponent(prop: {
         <input type="time" value={init} onChange={(e) => setInit(e.target.value)} placeholder="de" />-
         <input type="time" value={final} onChange={(e) => setFinal(e.target.value)} placeholder="até" />
       </HoursAdd>
+      <HoursAdd>
+        Valor da consulta:
+        <input type="number" placeholder="Selecione um valor para a hora" value={price} onChange={(e) => setPrice(Number(e.currentTarget.value))} />
+      </HoursAdd>
 
       {prop.id == 0 ? (
         <button
           onClick={() => {
             if (prop.create) {
-              prop.create(prop.id, init, final);
+              prop.create(prop.id, init, final, price);
               openModal(<></>);
             }
           }}
@@ -135,7 +141,7 @@ export default function HoursComponent(prop: {
           <button
             onClick={() => {
               if (prop.update) {
-                prop.update(prop.id, init, final);
+                prop.update(prop.id, init, final, price);
                 openModal(<></>);
               }
             }}

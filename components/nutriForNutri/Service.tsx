@@ -48,12 +48,8 @@ export function ServiceComponent() {
     return new Date(combinedDateTime); // Retorna a data no formato Date
   }
 
-  useEffect(() => {
-    console.log(client);
-  }, [client]);
-
   async function getMyData() {
-    const r = await GetRevenues();
+    const r = await GetRevenues(date);
     if (r.success) {
       if (r.data?.revenue) setRevenue(r.data.revenue);
     }
@@ -63,9 +59,6 @@ export function ServiceComponent() {
     selecteds.map((v) => {
       v.dateFinal = combineDateAndTime(dateRevenue, v.dateFinal).toISOString();
       v.dateInit = combineDateAndTime(dateRevenue, v.dateInit).toISOString();
-      console.log(dateRevenue);
-      console.log(v.dateInit);
-      console.log(combineDateAndTime(dateRevenue, v.dateInit).toISOString());
     });
 
     const r = await createRevenueUser(selecteds, userId);
@@ -83,7 +76,21 @@ export function ServiceComponent() {
   }
 
   async function getData() {
-    const data = await getServicesNutri();
+    const data = await getServicesNutri(date);
+
+    if (!data.success) showAlert(data.data?.message ?? "", "error");
+
+    if (data.data?.servicesLast) {
+      setLast(data.data.servicesLast);
+    }
+
+    if (data.data?.servicesOpen) {
+      setOpen(data.data.servicesOpen);
+    }
+  }
+
+  async function getDataByData(dat: string) {
+    const data = await getServicesNutri(dat);
 
     if (!data.success) showAlert(data.data?.message ?? "", "error");
 
@@ -123,7 +130,14 @@ export function ServiceComponent() {
         <ServiceDate>
           <div>
             <p>Data: </p>
-            <ServiceDateInput type="date" value={date} onChange={(e) => setDate(e.currentTarget.value)} />
+            <ServiceDateInput
+              type="date"
+              value={date}
+              onChange={(e) => {
+                setDate(e.currentTarget.value);
+                getDataByData(e.currentTarget.value);
+              }}
+            />
           </div>
         </ServiceDate>
         <UsersService>
@@ -142,12 +156,12 @@ export function ServiceComponent() {
             <User key={i + "last"} onClick={() => openRevenuesUser(v)}>
               <UserImg src={v.picture ?? "/png/remo.jpg"} />
               <UserTitle>{v.name}</UserTitle>
-              <UserHour>Realizado em: {new Date(v.service_final).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}</UserHour>
+              <UserHour>Finalizado em: {new Date(v.service_final).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}</UserHour>
             </User>
           ))}
         </UsersService>
       </LeftService>
-      <CenterService>
+      <CenterService $grid={iCan}>
         {iCan == "wait" ? (
           <>
             <MySvg src="/icons/user.svg" />
@@ -176,6 +190,10 @@ export function ServiceComponent() {
                     type="nutri"
                     finished={client.finished}
                     close={client.rating}
+                    closeChat={() => {
+                      setClient(undefined);
+                      setICan("wait");
+                    }}
                   />
                 ) : (
                   <></>
@@ -191,7 +209,14 @@ export function ServiceComponent() {
                   <ServiceDateTwo>
                     <div>
                       <p>Data: </p>
-                      <ServiceDateInput type="date" value={dateRevenue} onChange={(e) => setDateRevenue(e.currentTarget.value)} />
+                      <ServiceDateInput
+                        type="date"
+                        value={dateRevenue}
+                        onChange={(e) => {
+                          setDateRevenue(e.currentTarget.value);
+                          getData();
+                        }}
+                      />
                     </div>
                   </ServiceDateTwo>
                   <MyRevenues>

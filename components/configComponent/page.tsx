@@ -172,7 +172,7 @@ export default function ConfigComponent(props: Props) {
             </ConfigItem>
           </ConfigGroup>
           <ConfigGroup>
-            <ConfigGroupLabel>Visibilidade</ConfigGroupLabel>
+            <ConfigGroupLabel>Conta</ConfigGroupLabel>
             <ConfigItem>
               <ItemLabel>Trocar email:</ItemLabel>
               <ItemField value={newEmail} onChange={(e) => setNewEmail(e.currentTarget.value)} placeholder="Digite seu email" type="text"></ItemField>

@@ -259,7 +259,43 @@ export const ChatMessagesContainer = styled.div`
   margin: auto;
   overflow-x: hidden;
   overflow-y: auto;
+  padding-bottom: 3vh;
   scroll-behavior: smooth;
+
+  /* Webkit (Chrome, Edge, Safari) */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+    width: 100%;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #68c578bc;
+    border-radius: 10px;
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-button {
+    background-color: transparent;
+    height: 0px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #68c578;
+  }
+`;
+
+export const DateDiv = styled.div`
+  background-color: #048304;
+  width: fit-content;
+  margin: 1vh auto;
+  padding: 1% 2%;
+  border-radius: 20px;
+  font-weight: bolder;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
 `;
 
 export const MessageRecived = styled.div`
@@ -462,10 +498,23 @@ export const ChatDigit = styled.div`
 
 export const NoChatSelected = styled.div`
   color: ${(props) => props.theme.palette.primary.contrastText};
-  margin: auto;
   text-align: center;
-
   font-weight: lighter;
+  margin: auto;
+
+  & > span {
+    display: flex;
+    height: 15vh;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+
+  & > span > svg {
+    height: 15vh;
+    width: 15vh;
+    fill: ${(props) => props.theme.palette.primary.light};
+  }
 
   & > h1 {
     font-size: calc(var(--px) * 24);
@@ -490,7 +539,6 @@ export const NoChatToMessage = styled.h1`
 export const FinishedContainer = styled.div`
   width: 80%;
   height: 60%;
-  background-color: blue;
   margin: auto;
   display: flex;
   flex-wrap: wrap;
@@ -511,6 +559,30 @@ export const FinishedContainer = styled.div`
     left: -12.5%;
     position: absolute;
     z-index: 0; /* Tente valores diferentes para ver o efeito */
+  }
+
+  & > span > div {
+    height: 5vh;
+    width: 100%;
+    display: flex;
+    position: absolute;
+  }
+
+  & > span > div > span {
+    margin-left: auto;
+  }
+
+  & > span > div > span > svg {
+    height: 100%;
+    width: 100%;
+    aspect-ratio: 1/1;
+    fill: black;
+    cursor: pointer;
+    transition: 500ms;
+  }
+
+  & > span > div > span > svg:hover {
+    transform: scale(1.1);
   }
 
   & > span > h1 {
@@ -577,4 +649,11 @@ export const FinishedContainer = styled.div`
     position: relative;
     z-index: 5;
   }
+`;
+
+export const ChatFinished = styled.p`
+  width: 100%;
+  text-align: center;
+  font-weight: bolder;
+  color: ${(props) => props.theme.palette.primary.contrastText};
 `;

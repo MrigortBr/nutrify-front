@@ -29,6 +29,7 @@ import ModalNewPost from "../modalNewPost/page";
 import ModalChat from "../modalChat/page";
 import useSocket, { createMySocket } from "@/service/socket";
 import ModalSearch from "../modalSearch/page";
+import ModalNotifications from "../notification/page";
 
 export let socket: SocketIOClient.Socket;
 
@@ -75,6 +76,18 @@ export default function Index() {
     detectPathName();
     getSimpleMenu();
   }, []);
+
+  useEffect(() => {
+    listenNotification();
+  }, [username]);
+
+  function listenNotification() {
+    socket.off(`${username}notification`);
+    socket.on(`${username}notification`, (data: { message: string }) => {
+      console.log(data);
+      showAlert(data.message, "info");
+    });
+  }
 
   function detectPathName() {
     if (pathname == "/home") {
@@ -157,7 +170,8 @@ export default function Index() {
       <MenuComponent
         $select={usePage.search(".alert.") != -1 ? true : false}
         onClick={() => {
-          showAlert("Função em desenvolvimento", "info");
+          setUsePage((e) => (e += ".alert."));
+          openModal(<ModalNotifications closeCall={closeCall} />);
         }}
       >
         <ComponentIcon src="/icons/alert.svg" />

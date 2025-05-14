@@ -1,6 +1,7 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import {
   ChatDigit,
+  ChatFinished,
   ChatImg,
   ChatInputs,
   ChatMessages,
@@ -10,6 +11,7 @@ import {
   ChatMessagesHeader,
   ChatMessagesImg,
   ChatMessagesName,
+  DateDiv,
   FinishedContainer,
   MessageRecived,
   MessageSended,
@@ -30,6 +32,7 @@ type Props = {
   type: "nutri" | "user";
   finished: boolean;
   close: number;
+  closeChat: () => void;
 };
 
 export default function ChatNutriComponent(props: Props) {
@@ -44,14 +47,15 @@ export default function ChatNutriComponent(props: Props) {
   const [message, setMessage] = useState<string>("");
   const [changeInput, setChangeInput] = useState<NodeJS.Timeout>();
   const [finished, setFinished] = useState<boolean>(props.finished);
-
+  const [finishedClosed, setFinishedClosed] = useState<boolean>(props.finished);
   const [rating, setRating] = useState<number>(0);
   const [description, setDescription] = useState<string>("");
 
   useEffect(() => {
     getUserOnline();
-    console.log(props.close);
-    console.log(finished && props.type == "user" && props.close == 6);
+    if (finishedClosed) {
+      getRating();
+    }
   }, []);
 
   useEffect(() => {
@@ -59,8 +63,29 @@ export default function ChatNutriComponent(props: Props) {
       listenType();
       listenChat();
       getHistory();
+      listenClose();
     }
   }, [username]);
+
+  function listenClose() {
+    socket.on(`${props.id}finished`, () => {
+      if (props.type == "nutri") {
+        setFinishedClosed(true);
+      }
+    });
+  }
+
+  function getRating() {
+    if (rating <= 0 && finishedClosed) {
+      const id = props.id;
+      socket.emit("getRating", { id });
+      socket.on(`${socket.id}reciveRating`, (data: { rating: number; description: string }) => {
+        setRating(data.rating);
+        setDescription(data.description.length > 0 ? data.description : "Sem comentario.");
+        socket.off(`${socket.id}reciveRating`);
+      });
+    }
+  }
 
   function listenType() {
     socket.on(`${socket.id}${username}`, (data: { change: boolean }) => {
@@ -115,9 +140,12 @@ export default function ChatNutriComponent(props: Props) {
     setHistory((e) => [...e, data]);
   }
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [history]);
+
   function SendMessage() {
     socket.on(`${socket.id}${username}sendedMessageNutri`, (data: dataHistory[]) => {
-      //console.log(data);
       data.forEach((v) => {
         addMessage(v);
       });
@@ -127,7 +155,6 @@ export default function ChatNutriComponent(props: Props) {
   }
 
   function listenChat() {
-    console.log("OPa");
     socket.on(`${socket.id}${username}recivedMessageNutri`, (data: dataHistory[]) => {
       data.forEach((v) => {
         v.mymessage = false;
@@ -137,8 +164,9 @@ export default function ChatNutriComponent(props: Props) {
   }
 
   function finishService() {
-    socket.emit(`finishNutri`, { finishService: true, rating: rating, description: description, nutrId: nutriId, id: props.id });
+    socket.emit(`finishNutri`, { finishService: true, rating: rating, description: description, nutriId: nutriId, id: props.id, username: username });
     setFinished(false);
+    setFinishedClosed(true);
   }
 
   function getHistory() {
@@ -149,25 +177,96 @@ export default function ChatNutriComponent(props: Props) {
     socket.emit("getHistoryNutri", { username });
   }
 
+  function renderMessagesWithDates(history: dataHistory[]) {
+    const elements: React.ReactNode[] = [];
+    const shownDates = new Set<string>();
+
+    history.forEach((item, index) => {
+      const dateObj = new Date(item.created_at);
+      const dateString = dateObj.toDateString();
+
+      // Renderiza a data apenas uma vez por dia
+      if (!shownDates.has(dateString)) {
+        shownDates.add(dateString);
+        elements.push(<DateDiv key={`date-${dateString}-${index}`}>{dateObj.toLocaleDateString("en-GB")}</DateDiv>);
+      }
+
+      const timeString = dateObj.toLocaleTimeString("en-GB", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      });
+
+      const messageComponent = !item.mymessage ? (
+        <MessageRecived key={`msg-${index}`}>
+          <p className="message">{item.message}</p>
+          <p className="hour">{timeString}</p>
+        </MessageRecived>
+      ) : (
+        <MessageSended key={`msg-${index}`}>
+          <p className="message">{item.message}</p>
+          <p className="hour">{timeString}</p>
+        </MessageSended>
+      );
+
+      elements.push(messageComponent);
+    });
+
+    return elements;
+  }
+
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  };
+
   return (
     <ChatMessages style={{ width: props.full ? "100%" : "", height: props.full ? "100%" : "" }}>
-      {finished && props.type == "user" && props.close == 6 ? (
+      {finished && props.type == "user" ? (
         <FinishedContainer>
           <span>
-            <h1>Avalie sua consulta</h1>
+            <div onClick={() => setFinished(false)}>
+              <MySvg src="/icons/close.svg" />
+            </div>
+            <h1>{finishedClosed ? "Avaliação" : "Avalie sua consulta"}</h1>
             <p>
-              Nota: <Rating value={rating} onChange={(e, v) => setRating(v ?? 0)} precision={0.5}></Rating>
+              Nota: <Rating value={rating} onChange={(e, v) => setRating(v ?? 0)} precision={0.5} readOnly={finishedClosed}></Rating>
             </p>
             <textarea
+              readOnly={finishedClosed}
               value={description}
               onChange={(e) => setDescription(e.currentTarget.value)}
-              placeholder="se quiser nos conte como foi seu atendimento"
+              placeholder="se quiser nos conte como foi seu atendimento "
             ></textarea>
-            <button onClick={finishService}>Enviar</button>
+            {finishedClosed ? <></> : <button onClick={finishService}>Enviar</button>}
           </span>
         </FinishedContainer>
       ) : (
-        <></>
+        <>
+          {finished && props.type == "nutri" && finishedClosed ? (
+            <FinishedContainer>
+              <span>
+                <div onClick={() => setFinished(false)}>
+                  <MySvg src="/icons/close.svg" />
+                </div>
+                <h1>{finishedClosed ? "Avaliação" : "Avalie sua consulta"}</h1>
+                <p>
+                  Nota: <Rating value={rating} onChange={(e, v) => setRating(v ?? 0)} precision={0.5} readOnly={finishedClosed}></Rating>
+                </p>
+                <textarea
+                  readOnly={finishedClosed}
+                  value={description}
+                  onChange={(e) => setDescription(e.currentTarget.value)}
+                  placeholder="se quiser nos conte como foi seu atendimento "
+                ></textarea>
+                {finishedClosed ? <></> : <button onClick={finishService}>Enviar</button>}
+              </span>
+            </FinishedContainer>
+          ) : (
+            <></>
+          )}
+        </>
       )}
 
       <ChatMessagesHeader>
@@ -178,26 +277,22 @@ export default function ChatNutriComponent(props: Props) {
           <p className="nameUser"> {name}</p>
           <p className="status">{isOnline ? "Online" : "Offline"}</p>
         </ChatMessagesName>
-        <ChatMessagesFinish onClick={() => setFinished(true)}>{!finished ? "Finalizar Chat" : "Chat finalizado"}</ChatMessagesFinish>
-        <ChatMessagesClose src="/icons/close.svg" style={{ marginLeft: "0" }} />
+        <ChatMessagesFinish
+          onClick={() => {
+            setFinished(true);
+            getRating();
+          }}
+        >
+          {!finishedClosed ? "Finalizar Chat" : "Abrir avaliação"}
+        </ChatMessagesFinish>
+
+        <ChatMessagesClose src="/icons/close.svg" style={{ marginLeft: "0" }} onClick={() => props.closeChat()} />
       </ChatMessagesHeader>
       <ChatMessagesContainer ref={chatContainerRef} key={"chatMessagesConatiner"}>
-        {history.map((value, index) =>
-          !value.mymessage ? (
-            <MessageRecived key={index}>
-              <p className="message">{value.message}</p>
-              <p className="hour">{new Date(value.created_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false })}</p>
-            </MessageRecived>
-          ) : (
-            <MessageSended key={index}>
-              <p className="message">{value.message}</p>
-              <p className="hour">{new Date(value.created_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false })}</p>
-            </MessageSended>
-          )
-        )}
+        {renderMessagesWithDates(history)}
       </ChatMessagesContainer>
-      {finished ? (
-        <></>
+      {finishedClosed ? (
+        <ChatFinished>O atendimento foi finalizado.</ChatFinished>
       ) : (
         <ChatInputs>
           <TextareaContainer value={message} onChange={onChangeTextArea} onKeyDown={onKey}></TextareaContainer>

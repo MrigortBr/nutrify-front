@@ -7,11 +7,27 @@ export type HoursObject = {
   service_final: string;
   service_init: string;
   void: boolean;
+  price: number;
 };
 
 type HoursReponse = dataResponse & {
   hours?: HoursObject[];
   id?: number;
+};
+
+type nutriOverview = {
+  sales: number;
+  services: number;
+  rating: number;
+};
+
+export type NutriOverviewResponse = dataResponse & {
+  nutriOverview?: nutriOverview;
+};
+
+type ConfigReponse = dataResponse & {
+  price?: number;
+  acceptClients?: boolean;
 };
 
 export async function getHours(date: string): Promise<ApiResponse<HoursReponse>> {
@@ -25,6 +41,45 @@ export async function getHours(date: string): Promise<ApiResponse<HoursReponse>>
   }
 
   return await ApiService.get(RoutesAPI.getHours + date, {}, { Authorization: apiKey });
+}
+
+export async function overview(): Promise<ApiResponse<NutriOverviewResponse>> {
+  const apiKey = localStorage.getItem("token");
+
+  if (!apiKey) {
+    return {
+      success: false,
+      data: { message: "Você precisa estar autenticado para isso" },
+    };
+  }
+
+  return await ApiService.get(RoutesAPI.overview, {}, { Authorization: apiKey });
+}
+
+export async function getConfigNutri(): Promise<ApiResponse<ConfigReponse>> {
+  const apiKey = localStorage.getItem("token");
+
+  if (!apiKey) {
+    return {
+      success: false,
+      data: { message: "Você precisa estar autenticado para isso" },
+    };
+  }
+
+  return await ApiService.get(RoutesAPI.getConfig, {}, { Authorization: apiKey });
+}
+
+export async function updateConfigNutri(price: number | undefined, acceptClients: boolean | undefined) {
+  const apiKey = localStorage.getItem("token");
+
+  if (!apiKey) {
+    return {
+      success: false,
+      data: { message: "Você precisa estar autenticado para isso" },
+    };
+  }
+
+  return await ApiService.put(RoutesAPI.updateConfigNutri, { price, acceptClients }, { Authorization: apiKey });
 }
 
 export async function getHoursByid(id: number, date: string): Promise<ApiResponse<HoursReponse>> {

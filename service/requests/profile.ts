@@ -105,6 +105,19 @@ export async function profileMarkedAPI(username: string): Promise<ApiResponse<da
   return await ApiService.get(RoutesAPI.marked + username, {}, { Authorization: apiKey });
 }
 
+export async function unmarkPost(postid: number): Promise<ApiResponse<dataResponse & { picture?: picture[] }>> {
+  const apiKey = localStorage.getItem("token");
+
+  if (!apiKey) {
+    return {
+      success: false,
+      data: { message: "Você precisa estar autenticado para isso" },
+    };
+  }
+
+  return await ApiService.delete(RoutesAPI.unmarked + postid, {}, { Authorization: apiKey });
+}
+
 export async function profileSimpleAPI(): Promise<ApiResponse<simpleprofileResponse>> {
   const apiKey = localStorage.getItem("token");
 

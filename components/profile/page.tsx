@@ -27,8 +27,9 @@ import {
   PictureInfoSpan,
   PictureInfoSpanContent,
   NoContent,
+  PicutreInfoSpanContentEdit,
 } from "./styled";
-import { followAPI, picture, profileAPI, profileMarkedAPI, ProfileUser, simpleProfile, unfollowAPI, updateAPI } from "@/service/requests/profile";
+import { followAPI, picture, profileAPI, profileMarkedAPI, ProfileUser, simpleProfile, unfollowAPI, unmarkPost, updateAPI } from "@/service/requests/profile";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import LoadingSpinner from "../LoadingSpinner/page";
@@ -41,6 +42,7 @@ import ModalEditPost from "../modalEditPost/page";
 import ModalChat from "../modalChat/page";
 import { PlanComponent } from "../planComponent";
 import { planFood } from "@/service/requests/Plan";
+import { socket } from "../menu/page";
 
 export type DateToPlanFood = {
   date: string;
@@ -80,6 +82,8 @@ export default function ProfileComponent() {
         setFollowers((o) => o - 1);
         return;
       }
+      socket.emit(`follow`, { username: profile.username });
+
       setIFollow(true);
       setLoadFollow(false);
     }
@@ -222,6 +226,7 @@ export default function ProfileComponent() {
       if (r.data?.profile) {
         setProfile(r.data.profile);
         setIFollow(r.data.profile.iFollow);
+        setFollowers(r.data.profile.followers);
         setIsMyProfile(r.data.profile.isMyProfile);
         setName(r.data.profile.name);
         setImg(r.data.profile.picture);
@@ -285,6 +290,21 @@ export default function ProfileComponent() {
     openModal(<ModalChat chatNew={{ username: username, picture: img }} />);
   }
 
+  async function removeMyMark(postid: number) {
+    setLoadContent(true);
+    const r = await unmarkPost(postid);
+
+    if (!r.success) {
+      showAlert(r.data?.message || "", "error");
+    } else {
+      const index = markedPictures.findIndex((e) => e.id == postid);
+      setMarkedPicture((o) => o.splice(index, 1));
+      showAlert(r.data?.message || "", "success");
+    }
+
+    setLoadContent(false);
+  }
+
   return (
     <>
       {loading ? (
@@ -322,7 +342,13 @@ export default function ProfileComponent() {
                     <UserButton onClick={saveEdit}>Salvar edição</UserButton>
                   ) : (
                     <>
-                      <UserButton onClick={() => setEditProfile(true)}>Editar</UserButton>
+                      <UserButton
+                        onClick={() => {
+                          setEditProfile(true);
+                        }}
+                      >
+                        Editar
+                      </UserButton>
                       <UserButton onClick={() => openModal(<ConfigComponent />)}>Configurações</UserButton>
                     </>
                   )}
@@ -390,17 +416,28 @@ export default function ProfileComponent() {
                 {!loadContent ? (
                   <ProfilePictures>
                     {markedPictures?.map((pic, index) => (
-                      <ProfilePictureSpan key={index} onClick={() => (editProfile ? openModal(<ModalEditPost post={pic} />) : openPost(pic.id))}>
+                      <ProfilePictureSpan key={index} onClick={() => (editProfile ? removeMyMark(pic.id) : openPost(pic.id))}>
                         <ProfilePicture key={index} src={pic.picture} />
                         <PictureInfoSpan>
-                          <PictureInfoSpanContent>
-                            <MySvg src="/icons/heart.svg" />
-                            <p>{pic.likes}</p>
-                          </PictureInfoSpanContent>
-                          <PictureInfoSpanContent>
-                            <MySvg src="/icons/chat.svg" />
-                            <p>{pic.comments}</p>
-                          </PictureInfoSpanContent>
+                          {editProfile ? (
+                            <>
+                              <PicutreInfoSpanContentEdit>
+                                <MySvg src="/icons/trash.svg" />
+                                <p>Remover Marcação</p>
+                              </PicutreInfoSpanContentEdit>
+                            </>
+                          ) : (
+                            <>
+                              <PictureInfoSpanContent>
+                                <MySvg src="/icons/heart.svg" />
+                                <p>{pic.likes}</p>
+                              </PictureInfoSpanContent>
+                              <PictureInfoSpanContent>
+                                <MySvg src="/icons/chat.svg" />
+                                <p>{pic.comments}</p>
+                              </PictureInfoSpanContent>
+                            </>
+                          )}
                         </PictureInfoSpan>
                       </ProfilePictureSpan>
                     ))}

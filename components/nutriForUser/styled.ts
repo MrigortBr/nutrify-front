@@ -118,6 +118,8 @@ export const BestNutriName = styled.p`
 export const OneNutri = styled(BestNutriCard)`
   margin-top: 1vh;
 
+  grid-column-start: 2;
+
   &::before {
     background-color: #efbf04;
     box-shadow: 1px 4px 14px 0px rgba(221, 217, 3, 0.75);
@@ -130,6 +132,7 @@ export const OneNutri = styled(BestNutriCard)`
 `;
 
 export const TwoNutri = styled(BestNutriCard)`
+  grid-column-start: 3;
   margin-top: 3vh;
   &::before {
     background-color: #c4c4c4;
@@ -144,6 +147,7 @@ export const TwoNutri = styled(BestNutriCard)`
 `;
 
 export const ThreeNutri = styled(BestNutriCard)`
+  grid-column-start: 1;
   margin-top: 4vh;
   &::before {
     background-color: #b87333;

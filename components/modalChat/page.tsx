@@ -26,6 +26,7 @@ import {
   ChatImgContainer,
   NoChatSelected,
   NoChatToMessage,
+  DateDiv,
 } from "./styled";
 import MySvg from "../MySvg/page";
 import { socket } from "../menu/page";
@@ -163,6 +164,7 @@ export default function ModalChat(props: Props) {
   }
 
   function iRecivedMessage() {
+    console.log(`${socket.id}${username}recivedMessage`);
     socket.on(`${socket.id}${username}recivedMessage`, (data: dataHistory[]) => {
       data.forEach((v) => {
         v.mymessage = false;
@@ -173,7 +175,14 @@ export default function ModalChat(props: Props) {
 
   function getChats() {
     socket.on(`${socket.id}myChats`, (data: UsersChats[]) => {
-      setChatUsers(data);
+      const index = data.findIndex((v) => v.user.username == "Nutrify");
+
+      if (index == -1) {
+        setChatUsers([{ user: { picture: "/png/remo.jpg", username: "Nutrify" }, message: "", noRead: 0, created_at: "" }, ...data]);
+      } else {
+        setChatUsers(data);
+      }
+
       setLoad(false);
     });
 
@@ -246,8 +255,6 @@ export default function ModalChat(props: Props) {
   }
 
   function setOnChange(username: string) {
-    console.log(`${socket.id}${username}`);
-
     socket.on(`${socket.id}${username}`, (data: { change: boolean }) => {
       setDigit(data.change);
     });
@@ -302,6 +309,56 @@ export default function ModalChat(props: Props) {
     setMessage(el.currentTarget.value);
   }
 
+  function renderMessagesWithDates(history: dataHistory[]) {
+    const elements: React.ReactNode[] = [];
+    const shownDates = new Set<string>();
+
+    history.forEach((item, index) => {
+      const dateObj = new Date(item.created_at);
+      const dateString = dateObj.toDateString();
+
+      // Renderiza a data apenas uma vez por dia
+      if (!shownDates.has(dateString)) {
+        shownDates.add(dateString);
+        elements.push(<DateDiv key={`date-${dateString}-${index}`}>{dateObj.toLocaleDateString("en-GB")}</DateDiv>);
+      }
+
+      const timeString = dateObj.toLocaleTimeString("en-GB", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      });
+
+      const messageComponent = !item.mymessage ? (
+        <MessageRecived key={`msg-${index}`}>
+          <p className="message">{item.message}</p>
+          <p className="hour">{timeString}</p>
+        </MessageRecived>
+      ) : (
+        <MessageSended key={`msg-${index}`}>
+          <p className="message">{item.message}</p>
+          <p className="hour">{timeString}</p>
+        </MessageSended>
+      );
+
+      elements.push(messageComponent);
+    });
+
+    return elements;
+  }
+
+  function openChatIA(newUsername: string, picture: string | null, noread: number) {
+    offAllSockets();
+    setLoadChat(true);
+    setUsername(newUsername);
+    setOnChange(newUsername);
+    setPicture(picture == null ? "/png/remo.jpg" : picture);
+    setChatSelected(true);
+    if (noread > 0) {
+      loadMessagesThisChat(newUsername);
+    }
+  }
+
   return (
     <ChatContainer>
       <ChatHeader>
@@ -335,19 +392,36 @@ export default function ModalChat(props: Props) {
                     }}
                     key={v.user.username}
                   >
-                    <ChatImgContainer>
-                      <ChatImgBackground>
-                        <ChatImg src={v.user.picture == null ? "/png/remo.jpg" : v.user.picture}></ChatImg>
-                      </ChatImgBackground>
-                    </ChatImgContainer>
-                    <ChatName>
-                      {v.user.username}
-                      {v.noRead > 0 ? <span>{v.noRead}</span> : <></>}
-                    </ChatName>
-                    <LastMessage>
-                      <p className="message">{v.message}</p>
-                      <p className="hour">{new Date(v.created_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false })}</p>
-                    </LastMessage>
+                    {v.user.username != "Nutrify" ? (
+                      <>
+                        <ChatImgContainer>
+                          <ChatImgBackground>
+                            <ChatImg src={v.user.picture == null ? "/png/remo.jpg" : v.user.picture}></ChatImg>
+                          </ChatImgBackground>
+                        </ChatImgContainer>
+                        <ChatName>
+                          {v.user.username}
+                          {v.noRead > 0 ? <span>{v.noRead}</span> : <></>}
+                        </ChatName>
+
+                        <LastMessage>
+                          <p className="message">{v.message}</p>
+                          <p className="hour">{new Date(v.created_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false })}</p>
+                        </LastMessage>
+                      </>
+                    ) : (
+                      <>
+                        <ChatImgContainer>
+                          <ChatImgBackground>
+                            <ChatImg src={v.user.picture == null ? "/png/remo.jpg" : v.user.picture}></ChatImg>
+                          </ChatImgBackground>
+                        </ChatImgContainer>
+                        <ChatName>
+                          {v.user.username}
+                          {v.noRead > 0 ? <span>{v.noRead}</span> : <></>}
+                        </ChatName>
+                      </>
+                    )}
                   </Chat>
                 ))}
 
@@ -395,10 +469,7 @@ export default function ModalChat(props: Props) {
                     </ChatImgContainer>
                     <ChatName>{v.name}</ChatName>
                     <LastMessage>
-                      <p className="message">
-                        Consulta: {new Date(v.service_init).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })} -{" "}
-                        {new Date(v.service_final).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
-                      </p>
+                      <p className="message">Consulta finalizada</p>
                     </LastMessage>
                   </Chat>
                 ))}
@@ -413,34 +484,31 @@ export default function ModalChat(props: Props) {
                 <>
                   {chatTypeSelected == "friends" ? (
                     <ChatMessages>
-                      <ChatMessagesHeader>
-                        <ChatMessagesImg>
-                          <ChatImg src={picture ?? "/png/remo.jpg"}></ChatImg>
-                        </ChatMessagesImg>
-                        <ChatMessagesName>
-                          <p className="nameUser"> {username}</p>
-                          <p className="status">{isOnline ? "Online" : "Offline"}</p>
-                        </ChatMessagesName>
-                        <ChatMessagesClose src="/icons/close.svg" />
-                      </ChatMessagesHeader>
+                      {username == "nutrify" ? (
+                        <ChatMessagesHeader>
+                          <ChatMessagesImg>
+                            <ChatImg src={picture ?? "/png/remo.jpg"}></ChatImg>
+                          </ChatMessagesImg>
+                          <ChatMessagesName>
+                            <p className="nameUser"> {username}</p>
+                            <p className="status">{isOnline ? "Online" : "Offline"}</p>
+                          </ChatMessagesName>
+                          <ChatMessagesClose src="/icons/close.svg" onClick={() => setChatSelected(false)} />
+                        </ChatMessagesHeader>
+                      ) : (
+                        <ChatMessagesHeader>
+                          <ChatMessagesImg>
+                            <ChatImg src={picture ?? "/png/remo.jpg"}></ChatImg>
+                          </ChatMessagesImg>
+                          <ChatMessagesName>
+                            <p className="nameUser"> {username}</p>
+                            <p className="status">Online</p>
+                          </ChatMessagesName>
+                          <ChatMessagesClose src="/icons/close.svg" onClick={() => setChatSelected(false)} />
+                        </ChatMessagesHeader>
+                      )}
                       <ChatMessagesContainer ref={chatContainerRef} key={"chatMessagesConatiner"}>
-                        {history.map((value, index) =>
-                          !value.mymessage ? (
-                            <MessageRecived key={index}>
-                              <p className="message">{value.message}</p>
-                              <p className="hour">
-                                {new Date(value.created_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false })}
-                              </p>
-                            </MessageRecived>
-                          ) : (
-                            <MessageSended key={index}>
-                              <p className="message">{value.message}</p>
-                              <p className="hour">
-                                {new Date(value.created_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false })}
-                              </p>
-                            </MessageSended>
-                          )
-                        )}
+                        {renderMessagesWithDates(history)}
                       </ChatMessagesContainer>
                       <ChatInputs>
                         <TextareaContainer value={message} onChange={onChangeTextArea} onKeyDown={onKey}></TextareaContainer>
@@ -470,6 +538,10 @@ export default function ModalChat(props: Props) {
                           nutriId={openSelected?.nutri_id}
                           picture={openSelected?.picture}
                           close={openSelected.rating}
+                          closeChat={() => {
+                            setOpenSelected(undefined);
+                            setChatSelected(false);
+                          }}
                         />
                       ) : (
                         <></>
@@ -479,7 +551,9 @@ export default function ModalChat(props: Props) {
                 </>
               ) : (
                 <NoChatSelected>
-                  <h1>Selecione um usuario para começar a conversa</h1>
+                  <MySvg src="/icons/user.svg" />
+
+                  <h1>Selecione um chat para começar a conversa</h1>
                   <h2>
                     Caso queira iniciar um novo chat clique na opção <b>mensagem</b> no perfil do usuario
                   </h2>

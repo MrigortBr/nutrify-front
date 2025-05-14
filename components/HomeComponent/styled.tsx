@@ -21,6 +21,43 @@ export const PostsContainer = styled.div`
   }
 `;
 
+export const FeedType = styled.ul<{ $type: "follow" | "discover" }>`
+  display: flex;
+  width: fit-content;
+  margin-top: 5vh;
+  margin-bottom: 2vh;
+  margin-left: auto;
+  margin-right: 5vw;
+  font-size: calc(var(--px) * 25);
+  color: ${(props) => props.theme.palette.primary.contrastText};
+  font-weight: bolder;
+  list-style: none;
+  border-radius: 20px;
+  border: 1px solid black;
+  gap: 2vw;
+  position: relative;
+  padding: 1% 1%;
+
+  &::after {
+    content: "";
+    position: absolute;
+    background-color: ${(props) => props.theme.palette.primary.light};
+    width: 50%;
+    height: 100%;
+    top: 0;
+    left: ${({ $type }) => ($type == "discover" ? "50%" : "0%")};
+    transition: 500ms;
+    border-radius: 20px;
+  }
+`;
+
+export const FeedTypeLi = styled.li<{ $type: boolean }>`
+  color: ${(props) => (props.$type ? "white" : props.theme.palette.primary.contrastText)};
+  transition: 600ms;
+  z-index: 9999;
+  cursor: pointer;
+`;
+
 export const PostContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -320,5 +357,17 @@ export const PostUsername = styled.p`
 
   @media (max-width: 768px) {
     font-size: calc((var(--px) * 30) * 4);
+  }
+`;
+
+export const NoContent = styled.h1`
+  color: ${(props) => props.theme.palette.primary.contrastText};
+  text-align: center;
+  width: 40%;
+  margin: auto;
+  font-weight: normal;
+
+  & > b {
+    cursor: pointer;
   }
 `;

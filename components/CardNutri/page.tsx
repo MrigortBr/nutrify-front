@@ -17,6 +17,7 @@ export default function CardNutri(prop: Prop) {
   const [selected, SetSelected] = useState<number>(0);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [hours, setHours] = useState<HoursObject[]>([]);
+  const [price, setPrice] = useState<string>(formatCurrency(0));
 
   async function selectHour() {
     const hour: HoursObject | undefined = hours.find((v) => v.id == selected);
@@ -36,7 +37,6 @@ export default function CardNutri(prop: Prop) {
 
   async function getData() {
     const data = await getHoursByid(nutri.nutri_id, date);
-
     if (!data.success) showAlert(data.data?.message ?? "", "error");
 
     if (data.data?.hours) {
@@ -47,6 +47,10 @@ export default function CardNutri(prop: Prop) {
   useEffect(() => {
     getData();
   }, []);
+
+  useEffect(() => {
+    getData();
+  }, [date]);
 
   return (
     <CardContainer>
@@ -62,8 +66,15 @@ export default function CardNutri(prop: Prop) {
       <HoursContainer>
         <span>
           Ecolha Data:
-          <HoursDate type="date" value={date} onChange={(e) => setDate(e.currentTarget.value)} />
+          <HoursDate
+            type="date"
+            value={date}
+            onChange={(e) => {
+              setDate(e.currentTarget.value);
+            }}
+          />
         </span>
+        <h2 style={{ opacity: selected ? "1" : "0" }}>Preço Total: {price}</h2>
         <HoursSpan>
           {hours.map((v, i) => (
             <Hour
@@ -72,17 +83,21 @@ export default function CardNutri(prop: Prop) {
               onClick={() => {
                 if (selected == v.id) {
                   SetSelected(0);
+                  setPrice(formatCurrency(0));
                 } else {
+                  setPrice(formatCurrency(v.price));
                   SetSelected(v.id);
                 }
               }}
             >
               {new Date(v.service_init).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })} -{" "}
               {new Date(v.service_final).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
+              <br></br> {v.price != nutri.price ? <>Preço: {formatCurrency(v.price)}</> : <></>}
             </Hour>
           ))}
         </HoursSpan>
       </HoursContainer>
+
       <ButtonSend $ican={selected != 0} onClick={selectHour}>
         Solicitar Horario
       </ButtonSend>

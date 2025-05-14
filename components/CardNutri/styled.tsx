@@ -13,7 +13,7 @@ export const NutriInfo = styled.div`
   color: black;
   display: grid;
   grid-template-columns: 35% 65%;
-  grid-template-rows: 40% 15% 25%;
+  grid-template-rows: 20% 20% 20% 20% 20%;
   height: 30%;
   width: 100%;
 
@@ -22,10 +22,14 @@ export const NutriInfo = styled.div`
     width: 100%;
     height: fit-content;
     margin-top: auto;
+    grid-row-start: 2;
+    grid-row-end: 2;
   }
 
   & > h2 {
     font-size: calc(var(--px) * 28);
+    grid-row-start: 3;
+    grid-row-end: 3;
   }
 
   & > span {
@@ -33,13 +37,16 @@ export const NutriInfo = styled.div`
     align-items: center;
     font-size: calc(var(--px) * 28);
     gap: 1vw;
+    font-weight: bold;
+    grid-row-start: 4;
+    grid-row-end: 4;
   }
 `;
 
 export const NutriInfoImage = styled.img`
   grid-row-start: 1;
-  grid-row-end: 4;
-  height: 80%;
+  grid-row-end: 6;
+  height: 75%;
   aspect-ratio: 1/1;
   border-radius: 50%;
   margin: auto;
@@ -52,6 +59,7 @@ export const HoursContainer = styled.div`
   border: 1px solid black;
   display: flex;
   flex-wrap: wrap;
+  position: relative;
   border-radius: 20px;
 
   & > span {
@@ -66,6 +74,27 @@ export const HoursContainer = styled.div`
     box-sizing: content-box;
     margin-top: -1.7vw;
     margin-right: auto;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: ${(props) => props.theme.palette.primary.contrastText};
+    position: absolute;
+  }
+
+  & > h2 {
+    width: 50%;
+    height: calc(var(--px) * 30);
+    color: white;
+    font-size: calc(var(--px) * 26);
+    border: 1px solid black;
+    border-radius: 10px;
+    margin-left: auto;
+    right: 25%;
+    padding: 2% 1%;
+    bottom: -2vh;
+    transition: 500ms;
+    box-sizing: content-box;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -102,12 +131,13 @@ export const Hour = styled.div<{ $selected?: boolean }>`
   height: fit-content;
   border-radius: 20px;
   cursor: pointer;
-  margin: 1vw;
+  margin: 0.7vw;
   color: ${(props) => props.theme.palette.secondary.main};
   background-color: ${(props) => (props.$selected ? props.theme.palette.primary.light : props.theme.palette.primary.contrastText)};
   position: relative;
   z-index: 9999;
   transition: 500ms;
+  text-align: center;
 `;
 
 export const ButtonSend = styled.button<{ $ican: boolean }>`

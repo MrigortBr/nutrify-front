@@ -31,6 +31,7 @@ import Image from "next/image";
 import { openModal } from "../MyCustomModal/page";
 import ModalEditPost from "../modalEditPost/page";
 import { PostCaption } from "../HomeComponent/styled";
+import { socket } from "../menu/page";
 
 export default function PostComponent() {
   const [liked, setLiked] = useState(false);
@@ -103,12 +104,14 @@ export default function PostComponent() {
         else setLikes((likes) => Number(likes) + 1);
       }
       setSendLike(false);
+
+      if (!liked) socket.emit(`like`, { username: username, link: `${window.location.pathname + window.location.search}` });
     }
   }
 
   async function sendComment() {
-    if (comment.length < 3) {
-      showAlert("O Tamanho do comentario deve maior ou igual a 4 caracters", "info");
+    if (comment.length <= 1) {
+      showAlert("O Tamanho do comentario deve maior ou igual a 1 caracters", "info");
       return;
     }
 
@@ -118,6 +121,8 @@ export default function PostComponent() {
       showAlert(r.data?.message || "", "error");
       return;
     }
+
+    socket.emit(`comment`, { username: username, link: `${window.location.pathname + window.location.search}` });
 
     if (simpleProfile) {
       const commentObj: comments = {
@@ -146,12 +151,10 @@ export default function PostComponent() {
                 {showMarked ? (
                   <>
                     {marked.map((v, i) => (
-                      <>
-                        <p key={i} onClick={() => router.push(Routes.profile + `?u=${v.username}`)}>
-                          {v.username}
-                          <ImageMarked src={v.picture} alt={v.username} key={i} />
-                        </p>
-                      </>
+                      <p key={i} onClick={() => router.push(Routes.profile + `?u=${v.username}`)}>
+                        {simpleProfile?.username == v.username ? "Você" : v.username}
+                        <ImageMarked src={v.picture ?? "/png/remo.jpg"} alt={v.username} key={`marked${v.username}${i}`} />
+                      </p>
                     ))}
                   </>
                 ) : (
@@ -224,7 +227,7 @@ export default function PostComponent() {
           {icanComment ? (
             <PostInputCommentsSpan>
               <PostInputComments value={comment} onChange={(e) => setComment(e.currentTarget.value)} placeholder="Adicione um comentario"></PostInputComments>
-              <SendCommentButton $show={comment.length > 3} onClick={sendComment}>
+              <SendCommentButton $show={comment.length > 0} onClick={sendComment}>
                 <MySvg src="icons/send.svg"></MySvg>
               </SendCommentButton>
             </PostInputCommentsSpan>
