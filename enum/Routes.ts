@@ -3,6 +3,8 @@ export enum RoutesAPI {
   login = "/user/login",
   register = "/user/register",
   registerNutri = "/user/register/nutri",
+  verifyAccount = "/user/verify",
+
   requestReset = "/reset/request",
   resetPWD = "/reset/",
   about = "/",

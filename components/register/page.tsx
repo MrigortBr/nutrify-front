@@ -8,6 +8,8 @@ import FormButton from "../formComponents/formButton";
 import { validateFormRegister } from "@/service/validateFields";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/enum/Routes";
+import { openModal } from "../MyCustomModal/page";
+import { AlertInModal } from "../alertInModal/page";
 
 export default function LoginComponent() {
   const [name, setName] = useState("");
@@ -30,8 +32,11 @@ export default function LoginComponent() {
       // if (jwt) localStorage.setItem("token", jwt);
       // else showAlert("Houve um erro tente fazer o login novamente", "warning");
       // router.push(Routes.home);
+      openModal(<AlertInModal text=""/>)
     }
   }
+
+
 
   return (
     <ConatinerLogin>
@@ -72,12 +77,14 @@ export default function LoginComponent() {
         <CreateAccount onClick={() => router.push(Routes.login)}>
           Tem uma conta? <b>Entre</b>
         </CreateAccount>
+        {/*
         <LineWidget side="left" />
-        <LineWidget side="right" />
-        <LoginWithGoogle>
+          <LineWidget side="right" />
+          <LoginWithGoogle>
           <LogoGoogle src="/png/googleLogo.png" />
           Registrar pelo google
         </LoginWithGoogle>
+        */}
       </DivLogin>
     </ConatinerLogin>
   );

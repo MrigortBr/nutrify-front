@@ -41,6 +41,7 @@ const pNew: planFood = {
   recipe: "",
   picture: "",
   marked: false,
+  kcal: "0"
 };
 
 export function PlanComponent(props: props) {
@@ -162,14 +163,14 @@ export function PlanComponent(props: props) {
                   <MySvg src="/icons/plus.svg" />
                   {showText == 0 ? "Adicionar Novo" : ""}
                 </PlanAddDiv>
-                <PlanAddDiv ref={refPlanTwo} onMouseEnter={() => setShowText(1)} onMouseLeave={() => setShowText(-1)}>
+                {/*                <PlanAddDiv ref={refPlanTwo} onMouseEnter={() => setShowText(1)} onMouseLeave={() => setShowText(-1)}>
                   <MySvg src="/icons/gear.svg" />
                   {showText == 1 ? "Configurações" : ""}
                 </PlanAddDiv>
                 <PlanAddDiv ref={refPlanThree} onMouseEnter={() => setShowText(2)} onMouseLeave={() => setShowText(-1)}>
                   <MySvg src="/icons/share.svg" />
                   {showText == 2 ? "Compartilhar" : ""}
-                </PlanAddDiv>
+                </PlanAddDiv>*/}
               </PlanEditOrCreate>
             ) : (
               <></>

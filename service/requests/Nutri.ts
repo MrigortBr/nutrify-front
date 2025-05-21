@@ -26,6 +26,7 @@ export type NutriOpen = {
   finished: boolean;
   rating: number;
   id: number;
+  price: number;
 };
 
 type NutriResponse = dataResponse & {
@@ -47,7 +48,7 @@ export async function getAllNutri(): Promise<ApiResponse<NutriResponse>> {
   return await ApiService.get(RoutesAPI.listSimpleNutri, {}, { Authorization: apiKey });
 }
 
-export async function setForHour(nutri_id: number, hourid: number): Promise<ApiResponse<NutriResponse>> {
+export async function setForHour(nutri_id: number, hourid: number, price: string): Promise<ApiResponse<NutriResponse>> {
   const apiKey = localStorage.getItem("token");
 
   if (!apiKey) {
@@ -57,7 +58,7 @@ export async function setForHour(nutri_id: number, hourid: number): Promise<ApiR
     };
   }
 
-  return await ApiService.post(RoutesAPI.markHour, { nutriId: nutri_id, hourId: hourid }, { Authorization: apiKey });
+  return await ApiService.post(RoutesAPI.markHour, { nutriId: nutri_id, hourId: hourid, price: price}, { Authorization: apiKey });
 }
 
 export async function getServices(): Promise<ApiResponse<NutriResponse>> {

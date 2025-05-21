@@ -11,6 +11,7 @@ export type planFood = {
   recipe: string;
   picture: string;
   marked: boolean;
+  kcal: string
 };
 
 type planCreate = dataResponse & {

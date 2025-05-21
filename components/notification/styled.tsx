@@ -43,12 +43,13 @@ export const NotificationTitle = styled.h1`
 
 export const NotificationItemsContainer = styled.div`
   width: 100%;
+  
   height: 90%;
-  overflow-y: auto;
   display: flex;
   flex-wrap: wrap;
+  overflow-x: hidden;
   overflow-y: auto;
-  flex-direction: column;
+  flex-direction: row;
 `;
 
 export const NotificationItem = styled.div<{ $read: boolean }>`

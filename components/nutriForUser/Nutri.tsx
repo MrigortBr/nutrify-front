@@ -76,7 +76,8 @@ export default function NutriComponent() {
         />
       ) : (
         <>
-          <BestNutri>
+          {/*
+                    <BestNutri>
             {bestNutri[2] ? (
               <ThreeNutri onClick={() => openModal(<CardNutri value={bestNutri[2]} />)}>
                 <BestNutriPicture src={bestNutri[2].picture ?? "/png/remo.jpg"} />
@@ -120,7 +121,8 @@ export default function NutriComponent() {
               <></>
             )}
           </BestNutri>
-          <ExploreTitle>Descobrir </ExploreTitle>
+
+          */}
 
           {/* <ExploreNutri>
             <input type="text" placeholder="Fazer busca" />
@@ -149,6 +151,8 @@ export default function NutriComponent() {
           </ExploreNutri> */}
 
           <ResultsExplore>
+            <ExploreTitle>Nutricionistas </ExploreTitle>
+
             {nutri.map((v, i) => (
               <NutriExplore key={i}>
                 <NutriExplorePicture src={v.picture ?? "/png/remo.jpg"} />

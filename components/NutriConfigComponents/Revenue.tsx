@@ -140,8 +140,7 @@ export default function RevenueComponent(props: Props) {
       {!newRevenue ? (
         <Revenue $showRecipe={showRevenueInfo}>
           <RevenueInfo $showRecipe={showRevenueInfo}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos deleniti beatae nulla a saepe magni doloremque sapiente explicabo, odio ratione
-            dolorem? Deserunt, reprehenderit. Quisquam labore facilis, sed quidem nostrum officiis.
+            {props.data.recipe}
           </RevenueInfo>
           <RevenueBody>
             <RevenueImageSpan>

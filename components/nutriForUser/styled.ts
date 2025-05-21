@@ -206,6 +206,7 @@ export const ExploreTitle = styled.span`
   position: relative;
   height: fit-content;
   margin-top: 2vh;
+  margin-bottom: 3vh;
 
   margin-left: 10px;
   font-size: calc(var(--px) * 32);
@@ -236,6 +237,9 @@ export const ResultsExplore = styled.div`
 export const NutriExplore = styled.div`
   display: flex;
   height: 7vh;
+    margin-top: 1vh;
+  margin-bottom: 1vh;
+
   background-color: rgb(227, 241, 229);
   border-radius: 20px;
   border: 1px solid black;

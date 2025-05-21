@@ -36,6 +36,8 @@ export default function PlanItemComponent(prop: {
   const [dateFinal, setDateFinal] = useState("00:00");
   const [nameType, setNameType] = useState("");
   const [recipe, setRecipe] = useState("");
+  const [kcal, setKcal] = useState("");
+
   const inputFile = useRef<HTMLInputElement>(null);
   const [isNew, setIsNew] = useState(prop.new);
   const [isEdit, setIsEdit] = useState(false);
@@ -101,6 +103,7 @@ export default function PlanItemComponent(prop: {
       name: newName,
       nameType: nameType,
       recipe: recipe,
+      kcal: kcal
     };
 
     const r = await insertPlanAPI(data);
@@ -134,6 +137,7 @@ export default function PlanItemComponent(prop: {
       name: newName,
       nameType: nameType,
       recipe: recipe,
+      kcal: kcal
     };
 
     const r = await updateAPI(data);
@@ -214,6 +218,9 @@ export default function PlanItemComponent(prop: {
           if (!loadMarked) {
             if (e.target instanceof HTMLButtonElement || isNew) {
             } else {
+              if (!prop.isMyProfile) return;
+
+              
               setLoadMarked(true);
               if (!marked) showAlert("Marcação feita: refeição realizada", "info");
               if (marked) showAlert("Marcação feita: refeição não realizada", "info");
@@ -267,7 +274,14 @@ export default function PlanItemComponent(prop: {
           <PlanItemDescription>
             Horario: {formatHourMinute(prop.plan.dateInit)} - {formatHourMinute(prop.plan.dateFinal)}
           </PlanItemDescription>
+          
         )}
+
+        {!isNew ?           <PlanItemDescription>
+            Calorias: {prop.plan.kcal} kcal
+          </PlanItemDescription> :
+          <PlanItemTitleInput type="number" placeholder="Calorias" value={kcal} onChange={(e) => setKcal(e.currentTarget.value)} />
+}
 
         <PlanButton
           onClick={() => {

@@ -83,7 +83,7 @@ export default function ServiceComponent() {
                 <ItemButton
                   onClick={() =>
                     openModal(
-                      <CardNutri value={{ name: v.name, number_service: 0, nutri_id: Number(v.nutri_id), picture: v.picture, price: 0, rating: v.rating }} />
+                      <CardNutri value={{ name: v.name, number_service: 0, nutri_id: Number(v.nutri_id), picture: v.picture, price: v.price, rating: v.rating }} />
                     )
                   }
                 >

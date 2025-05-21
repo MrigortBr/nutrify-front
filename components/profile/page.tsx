@@ -73,13 +73,13 @@ export default function ProfileComponent() {
 
   async function follow() {
     if (profile) {
-      setFollowers((o) => o + 1);
+      setFollowers((o) => Number(o) + 1);
 
       setLoadFollow(true);
       const r = await followAPI(profile.username);
       if (!r.success) {
         showAlert(r.data?.message || "", "error");
-        setFollowers((o) => o - 1);
+        setFollowers((o) => Number(o) - 1);
         return;
       }
       socket.emit(`follow`, { username: profile.username });
@@ -91,13 +91,13 @@ export default function ProfileComponent() {
 
   async function unfollow() {
     if (profile) {
-      setFollowers((o) => o - 1);
+      setFollowers((o) => Number(o) - 1);
       setLoadFollow(true);
       const r = await unfollowAPI(profile.username);
 
       if (!r.success) {
         showAlert(r.data?.message || "", "error");
-        setFollowers((o) => o + 1);
+        setFollowers((o) => Number(o) + 1);
         return;
       }
 

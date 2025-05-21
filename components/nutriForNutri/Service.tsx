@@ -49,7 +49,7 @@ export function ServiceComponent() {
   }
 
   async function getMyData() {
-    const r = await GetRevenues(date);
+    const r = await GetRevenues();
     if (r.success) {
       if (r.data?.revenue) setRevenue(r.data.revenue);
     }
@@ -205,7 +205,7 @@ export function ServiceComponent() {
             ) : (
               <>
                 <ContainerRevenues>
-                  <h1>Suas receitas {">"}</h1>
+                  <h1>Suas receitas</h1>
                   <ServiceDateTwo>
                     <div>
                       <p>Data: </p>
@@ -221,9 +221,8 @@ export function ServiceComponent() {
                   </ServiceDateTwo>
                   <MyRevenues>
                     {revenues.map((v, i) => (
-                      <>
                         <SimpleRevenue key={v.id} data={v} setSelected={addSelected} />
-                      </>
+                    
                     ))}
                   </MyRevenues>
                   <RevenuesButtons>

@@ -15,6 +15,7 @@ export type dataResponse = {
 
 type HeaderRequest = {
   Authorization: string;
+  token?: string
 };
 
 class AppService {

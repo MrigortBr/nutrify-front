@@ -35,3 +35,7 @@ export async function registerAPI(registerData: registerData): Promise<ApiRespon
 export async function registerNutriAPI(registerData: registerNutri): Promise<ApiResponse<loginResponse>> {
   return await ApiService.post(RoutesAPI.registerNutri, registerData);
 }
+
+export async function verifyAccount(token: string): Promise<ApiResponse<loginResponse>> {
+  return await ApiService.get(RoutesAPI.verifyAccount, {}, {token: token, Authorization: ""});
+}

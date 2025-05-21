@@ -326,7 +326,7 @@ const exit = keyframes`
 
 export const PlanItemRecipe = styled.span<{ $showRecipe: boolean }>`
   height: 80%;
-  margin-top: 10%;
+  margin-top: 5%;
   margin-right: 0;
   padding: 1%;
   background-color: #05ba62;
@@ -343,6 +343,8 @@ export const PlanItemRecipe = styled.span<{ $showRecipe: boolean }>`
       : css`
           animation: ${exit} 500ms forwards;
           z-index: -3;
+                    height: 5px;
+
         `};
 `;
 

@@ -104,14 +104,17 @@ export default function LoginComponent() {
         <CreateAccount onClick={() => router.push(Routes.register)}>
           Ainda não é registrado? <b>Cadastre-se</b>
         </CreateAccount>
-        <BackgroundLine>
+
+          {/*
+                  <BackgroundLine>
           <WidgetLine></WidgetLine>
           <LineText>OU</LineText>
         </BackgroundLine>
-        <LoginWithGoogle onClick={() => showAlert("Função em desenvolvimento", "info")}>
+                  <LoginWithGoogle onClick={() => showAlert("Função em desenvolvimento", "info")}>
           <LogoGoogle src="/png/googleLogo.png" />
           login com o google
         </LoginWithGoogle>
+          */}
       </DivLogin>
       {!isMobile ? (
         <>

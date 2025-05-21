@@ -9,6 +9,8 @@ import { validateFormRegister } from "@/service/validateFields";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/enum/Routes";
 import { DataListRegister, SpanInputTextDouble } from "./styled";
+import { openModal } from "../MyCustomModal/page";
+import { AlertInModal } from "../alertInModal/page";
 
 const crnList: CRN[] = [
   "CRN-1", // São Paulo
@@ -48,11 +50,13 @@ export default function RegisterNutritionist() {
       // if (jwt) localStorage.setItem("token", jwt);
       // else showAlert("Houve um erro tente fazer o login novamente", "warning");
       // router.push(Routes.home);
+      openModal(<AlertInModal text=""/>)
     }
   }
 
+
   return (
-    <ConatinerLogin>
+    <ConatinerLogin>    
       <Logo src="/png/logo.png" />
       <DivLogin $go="center">
         <TextLogin>REGISTRAR</TextLogin>

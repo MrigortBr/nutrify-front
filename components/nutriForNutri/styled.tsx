@@ -890,7 +890,7 @@ export const ContainerRevenues = styled.div`
 `;
 
 export const MyRevenues = styled.div`
-  height: 65%;
+  height: 75%;
   width: 100%;
   overflow-x: auto;
   color: ${(props) => props.theme.palette.primary.contrastText};
@@ -900,8 +900,10 @@ export const MyRevenues = styled.div`
 `;
 
 export const RevenuesButtons = styled.div`
-  height: 20%;
+  height: 10%;
+
   width: 100%;
+  margin-top: 0;
   display: flex;
   align-items: center;
   justify-content: center;
