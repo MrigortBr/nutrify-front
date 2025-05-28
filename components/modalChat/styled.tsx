@@ -43,6 +43,32 @@ export const ChatLeft = styled.div`
   width: 30%;
   border-bottom-left-radius: 20px;
   border-right: 1px solid black;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+    width: 100%;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #68c578bc;
+    border-radius: 10px;
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-button {
+    background-color: transparent;
+    height: 0px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #68c578;
+  }
 `;
 
 export const Chat = styled.div`

@@ -276,6 +276,7 @@ export const ButtonSendComment = styled.button<{ $show: boolean }>`
   background-color: white;
   right: 3.5%;
   border: 0;
+  border: 1px solid black;
 
   transition: 500ms;
   animation-name: ${({ $show }) => ($show ? openSendButton : closeSendButton)};

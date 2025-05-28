@@ -21,6 +21,7 @@ import { dataHistory } from "@/service/socket/types";
 import MySvg from "../MySvg/page";
 import { socket } from "../menu/page";
 import { Rating } from "@mui/material";
+import { showAlert } from "../alert/page";
 
 type Props = {
   nutriId: string;
@@ -50,6 +51,7 @@ export default function ChatNutriComponent(props: Props) {
   const [finishedClosed, setFinishedClosed] = useState<boolean>(props.finished);
   const [rating, setRating] = useState<number>(0);
   const [description, setDescription] = useState<string>("");
+  const [avaliable, setAvaliable] = useState(false);
 
   useEffect(() => {
     getUserOnline();
@@ -71,6 +73,11 @@ export default function ChatNutriComponent(props: Props) {
     socket.on(`${props.id}finished`, () => {
       if (props.type == "nutri") {
         setFinishedClosed(true);
+        setAvaliable(false);
+      } else {
+        setFinishedClosed(true);
+        setFinished(true);
+        setAvaliable(true);
       }
     });
   }
@@ -80,10 +87,22 @@ export default function ChatNutriComponent(props: Props) {
       const id = props.id;
       socket.emit("getRating", { id });
       socket.on(`${socket.id}reciveRating`, (data: { rating: number; description: string }) => {
-        setRating(data.rating);
-        setDescription(data.description.length > 0 ? data.description : "Sem comentario.");
+        if (data.rating == 6) {
+          setAvaliable(true);
+        } else {
+          setAvaliable(false);
+        }
+        setRating(data.rating < 6 ? data.rating : 0);
+        try {
+          setDescription(data.description.length > 0 ? data.description : "Sem comentario.");
+        } catch (error) {}
         socket.off(`${socket.id}reciveRating`);
       });
+    } else {
+      socket.emit("finishByNutri", { finishService: true, nutriId: nutriId, id: props.id, username: username });
+      setFinished(true);
+      setFinishedClosed(true);
+      showAlert("Chat finalizado, aguarde para o usuario avalaiar o atedimento", "success");
     }
   }
 
@@ -167,6 +186,7 @@ export default function ChatNutriComponent(props: Props) {
     socket.emit(`finishNutri`, { finishService: true, rating: rating, description: description, nutriId: nutriId, id: props.id, username: username });
     setFinished(false);
     setFinishedClosed(true);
+    setAvaliable(false);
   }
 
   function getHistory() {
@@ -229,17 +249,17 @@ export default function ChatNutriComponent(props: Props) {
             <div onClick={() => setFinished(false)}>
               <MySvg src="/icons/close.svg" />
             </div>
-            <h1>{finishedClosed ? "Avaliação" : "Avalie sua consulta"}</h1>
+            <h1>{finishedClosed == true && avaliable == false ? "Avaliação" : "Avalie sua consulta"}</h1>
             <p>
-              Nota: <Rating value={rating} onChange={(e, v) => setRating(v ?? 0)} precision={0.5} readOnly={finishedClosed}></Rating>
+              Nota: <Rating value={rating} onChange={(e, v) => setRating(v ?? 0)} precision={0.5} readOnly={finishedClosed && !avaliable}></Rating>
             </p>
             <textarea
-              readOnly={finishedClosed}
+              readOnly={finishedClosed && !avaliable}
               value={description}
               onChange={(e) => setDescription(e.currentTarget.value)}
               placeholder="se quiser nos conte como foi seu atendimento "
             ></textarea>
-            {finishedClosed ? <></> : <button onClick={finishService}>Enviar</button>}
+            {finishedClosed && !avaliable ? <></> : <button onClick={finishService}>Enviar</button>}
           </span>
         </FinishedContainer>
       ) : (

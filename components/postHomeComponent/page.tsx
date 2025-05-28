@@ -82,8 +82,9 @@ export default function PostHomeComponent(prop: Props) {
   }
 
   async function sendComment() {
-    if (newComment.length < 3) {
-      showAlert("O Tamanho do comentario deve maior ou igual a 4 caracters", "info");
+    alert(newComment.length);
+    if (newComment.length < 0) {
+      showAlert("O Tamanho do comentario deve maior ou igual a 1 caracter", "info");
       return;
     }
 
@@ -91,9 +92,12 @@ export default function PostHomeComponent(prop: Props) {
 
     if (!r.success) {
       showAlert(r.data?.message || "", "error");
+
       return;
     }
 
+    setNewComment("");
+    setCommentsMax((o) => o + 1);
     const newComments = [{ id: "0", comment: newComment, created_at: new Date().toString(), username: simpleProfile?.username || "Eu: " }];
 
     setComments((o) => newComments.concat(o));
@@ -175,7 +179,31 @@ export default function PostHomeComponent(prop: Props) {
           {comments.map((comment, index) => (
             <p key={index}>
               <b onClick={() => router.push(Routes.profile + `?u=${comment.username}`)}>@{comment.username}: </b>
-              {comment.comment} <span>{comment.created_at}</span>
+              {comment.comment}{" "}
+              <span>
+                {(() => {
+                  const createdAt = new Date(comment.created_at);
+                  const now = new Date();
+
+                  // Verifica se é o mesmo dia (baseado em UTC)
+                  const isToday =
+                    createdAt.getUTCFullYear() === now.getUTCFullYear() &&
+                    createdAt.getUTCMonth() === now.getUTCMonth() &&
+                    createdAt.getUTCDate() === now.getUTCDate();
+
+                  return isToday
+                    ? new Intl.DateTimeFormat("pt-BR", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        timeZone: "UTC",
+                      }).format(createdAt)
+                    : new Intl.DateTimeFormat("pt-BR", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        timeZone: "UTC",
+                      }).format(createdAt);
+                })()}
+              </span>
             </p>
           ))}
           {comments.length != commentsMax ? (
@@ -198,14 +226,13 @@ export default function PostHomeComponent(prop: Props) {
           ) : (
             <PostComment value={newComment} onChange={(e) => setNewComment(e.currentTarget.value)} placeholder="Seja o primeiro a comentar!"></PostComment>
           )}
-          <ButtonSendComment $show={newComment.length > 3} onClick={sendComment}>
+          <ButtonSendComment $show={newComment.length > 0} onClick={sendComment}>
             <MySvg src="icons/send.svg"></MySvg>
           </ButtonSendComment>
         </PostCommentSpan>
       ) : (
         <>
           <PostCommentSpan style={{ justifyContent: "center" }}>
-            {" "}
             <b>Comentario bloqueado</b>
           </PostCommentSpan>
         </>

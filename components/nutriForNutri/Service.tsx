@@ -110,7 +110,8 @@ export function ServiceComponent() {
 
   async function openRevenuesUser(user: NutriOpen) {
     const id = user.user_id;
-    const r = await getRevenueUser(id, dateRevenue);
+    console.log(user);
+    const r = await getRevenueUser(id, dateRevenue, user.id);
 
     if (r.success) {
       if (r.data?.description == ".") {
@@ -221,8 +222,7 @@ export function ServiceComponent() {
                   </ServiceDateTwo>
                   <MyRevenues>
                     {revenues.map((v, i) => (
-                        <SimpleRevenue key={v.id} data={v} setSelected={addSelected} />
-                    
+                      <SimpleRevenue key={v.id} data={v} setSelected={addSelected} />
                     ))}
                   </MyRevenues>
                   <RevenuesButtons>

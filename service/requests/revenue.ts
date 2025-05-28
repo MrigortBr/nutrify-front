@@ -31,7 +31,7 @@ export async function GetRevenues(): Promise<ApiResponse<NutriResponse>> {
   return await ApiService.get(RoutesAPI.GetRevenues, {}, { Authorization: apiKey });
 }
 
-export async function getRevenueUser(id: number, date: string): Promise<ApiResponse<NutriResponse>> {
+export async function getRevenueUser(userId: number, date: string, id: number): Promise<ApiResponse<NutriResponse>> {
   const apiKey = localStorage.getItem("token");
 
   if (!apiKey) {
@@ -41,7 +41,7 @@ export async function getRevenueUser(id: number, date: string): Promise<ApiRespo
     };
   }
 
-  return await ApiService.get(RoutesAPI.getRevenueUser + id + "/" + date, {}, { Authorization: apiKey });
+  return await ApiService.get(RoutesAPI.getRevenueUser + userId + "/" + date + "/" + id, {}, { Authorization: apiKey });
 }
 
 export async function createRevenue(revenue: Revenue): Promise<ApiResponse<NutriResponse>> {
@@ -57,7 +57,7 @@ export async function createRevenue(revenue: Revenue): Promise<ApiResponse<Nutri
   return await ApiService.post(RoutesAPI.createRevenue, { revenue }, { Authorization: apiKey });
 }
 
-export async function createRevenueUser(revenue: Revenue[], id: number): Promise<ApiResponse<NutriResponse>> {
+export async function createRevenueUser(revenue: Revenue[], userid: number): Promise<ApiResponse<NutriResponse>> {
   const apiKey = localStorage.getItem("token");
 
   if (!apiKey) {
@@ -67,7 +67,7 @@ export async function createRevenueUser(revenue: Revenue[], id: number): Promise
     };
   }
 
-  return await ApiService.post(RoutesAPI.createRevenueUser + id, { revenue }, { Authorization: apiKey });
+  return await ApiService.post(RoutesAPI.createRevenueUser + userid, { revenue }, { Authorization: apiKey });
 }
 
 export async function updateRevenue(revenue: Revenue): Promise<ApiResponse<NutriResponse>> {
