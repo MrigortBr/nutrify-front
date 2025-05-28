@@ -128,16 +128,17 @@ export default function PlanItemComponent(prop: {
   }
 
   async function saveEdit() {
-    const initDate = `${prop.date}T${dateInit}:00`;
-    const finalDate = `${prop.date}T${dateFinal}:00`;
-    if (!isValidDate(initDate)) showAlert("Horario inicial (de) coloque digite validos.", "warning");
-    if (!isValidDate(finalDate)) showAlert("Horario final (Até) coloque digite validos.", "warning");
+    if (!isValidDate(`${prop.date}T${dateInit}:00`)) showAlert("Horario inicial (de) coloque digite validos.", "warning");
+    if (!isValidDate(`${prop.date}T${dateFinal}:00`)) showAlert("Horario final (Até) coloque digite validos.", "warning");
+    const initDate = convetForGMT(`${prop.date}T${dateInit}:00`);
+    const finalDate = convetForGMT(`${prop.date}T${dateFinal}:00`);
+
     if (newName.length < 5) showAlert("O nome do prato tem que ter mais que 5 caracteres.", "warning");
 
     const data: planFood = {
       id: id,
-      dateFinal: new Date(finalDate),
-      dateInit: new Date(initDate),
+      dateFinal: finalDate,
+      dateInit: initDate,
       picture: picture,
       marked: false,
       name: newName,

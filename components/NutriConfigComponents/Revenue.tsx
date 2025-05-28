@@ -114,7 +114,6 @@ export default function RevenueComponent(props: Props) {
     if (!validateForm()) {
       return;
     }
-
     if (oldData.id == 0) {
       const newData: RevenueType = { id: 15, picture, name, nameType: typeRevenue, dateInit: initHour, dateFinal: finalHour, kcal, recipe };
       if (props.create) props.create(newData);
@@ -135,13 +134,23 @@ export default function RevenueComponent(props: Props) {
     if (props.remove) props.remove(oldData.id);
   }
 
+  function formatHourMinute(date: string): string {
+    try {
+      const newD = new Date(date);
+      if (isNaN(newD.getTime())) throw new Error("invalid date");
+      const hours = newD.getUTCHours().toString().padStart(2, "0");
+      const minutes = newD.getUTCMinutes().toString().padStart(2, "0");
+      return `${hours}:${minutes}`;
+    } catch (error) {
+      return date;
+    }
+  }
+
   return (
     <>
       {!newRevenue ? (
         <Revenue $showRecipe={showRevenueInfo}>
-          <RevenueInfo $showRecipe={showRevenueInfo}>
-            {props.data.recipe}
-          </RevenueInfo>
+          <RevenueInfo $showRecipe={showRevenueInfo}>{props.data.recipe}</RevenueInfo>
           <RevenueBody>
             <RevenueImageSpan>
               <RevenueImg style={{ height: "100%" }} src={picture.trim() === "" ? "/icons/image.svg" : picture} />
@@ -149,8 +158,7 @@ export default function RevenueComponent(props: Props) {
             <h1>{name}</h1>
             <h2>Refeição: {typeRevenue}</h2>
             <h3>
-              Horario: {new Date(initHour).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })} -{" "}
-              {new Date(finalHour).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
+              Horario: {formatHourMinute(initHour)} - {formatHourMinute(finalHour)}
             </h3>
             <h4>Kcal: {kcal}</h4>
 

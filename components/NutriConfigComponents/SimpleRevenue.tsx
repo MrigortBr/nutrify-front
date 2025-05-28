@@ -1,6 +1,15 @@
 import { Revenue } from "@/service/requests/revenue";
 import { useState } from "react";
-import { RevenueBody, RevenueImageSpan, RevenueImg, SimpleRevenueContainer } from "../nutriForNutri/styled";
+import {
+  LeftService,
+  RevenueBody,
+  RevenueImageSpan,
+  RevenueImg,
+  Service,
+  ServiceDate,
+  ServiceDateInput,
+  SimpleRevenueContainer,
+} from "../nutriForNutri/styled";
 import React from "react";
 
 type Prop = {
@@ -22,6 +31,13 @@ export default function SimpleRevenue(props: Prop) {
     setSelected((e) => !e);
   }
 
+  function formatHourMinute(date: string): string {
+    const newD = new Date(date);
+    const hours = newD.getUTCHours().toString().padStart(2, "0");
+    const minutes = newD.getUTCMinutes().toString().padStart(2, "0");
+    return `${hours}:${minutes}`;
+  }
+
   return (
     <SimpleRevenueContainer onClick={select} $selected={selected}>
       <RevenueBody>
@@ -31,8 +47,7 @@ export default function SimpleRevenue(props: Prop) {
         <h1>{name}</h1>
         <h2>Refeição: {typeRevenue}</h2>
         <h3>
-          Horario: {new Date(initHour).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })} -{" "}
-          {new Date(finalHour).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
+          Horario: {formatHourMinute(initHour)} - {formatHourMinute(finalHour)}
         </h3>
         <h4>Kcal: {kcal}</h4>
       </RevenueBody>
