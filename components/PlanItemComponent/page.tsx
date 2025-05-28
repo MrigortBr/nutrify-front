@@ -46,14 +46,13 @@ export default function PlanItemComponent(prop: {
 
   function formatHourMinute(date: Date): string {
     try {
-      const hours = date.getHours().toString().padStart(2, "0");
-      const minutes = date.getMinutes().toString().padStart(2, "0");
+      const hours = date.getUTCHours().toString().padStart(2, "0");
+      const minutes = date.getUTCMinutes().toString().padStart(2, "0");
       return `${hours}:${minutes}`;
     } catch (e) {
       const newD = new Date(date);
-
-      const hours = newD.getHours().toString().padStart(2, "0");
-      const minutes = newD.getMinutes().toString().padStart(2, "0");
+      const hours = newD.getUTCHours().toString().padStart(2, "0");
+      const minutes = newD.getUTCMinutes().toString().padStart(2, "0");
       return `${hours}:${minutes}`;
     }
   }
@@ -87,17 +86,24 @@ export default function PlanItemComponent(prop: {
     return !isNaN(date.getTime()); // Retorna true se a data for válida
   };
 
+  function convetForGMT(dateStr: string): Date {
+    const date = new Date(dateStr);
+    date.setHours(date.getHours() - 3);
+    return date;
+  }
+
   async function createPlan() {
-    const initDate = `${prop.date}T${dateInit}:00`;
-    const finalDate = `${prop.date}T${dateFinal}:00`;
-    if (!isValidDate(initDate)) showAlert("Horario inicial (de) coloque digite validos.", "warning");
-    if (!isValidDate(finalDate)) showAlert("Horario final (Até) coloque digite validos.", "warning");
+    if (!isValidDate(`${prop.date}T${dateInit}:00`)) showAlert("Horario inicial (de) coloque digite validos.", "warning");
+    if (!isValidDate(`${prop.date}T${dateFinal}:00`)) showAlert("Horario final (Até) coloque digite validos.", "warning");
+    const initDate = convetForGMT(`${prop.date}T${dateInit}:00`);
+    const finalDate = convetForGMT(`${prop.date}T${dateFinal}:00`);
+
     if (newName.length < 5) showAlert("O nome do prato tem que ter mais que 5 caracteres.", "warning");
 
     const data: planFood = {
       id: 0,
-      dateFinal: new Date(finalDate),
-      dateInit: new Date(initDate),
+      dateFinal: finalDate,
+      dateInit: initDate,
       picture: picture,
       marked: false,
       name: newName,
