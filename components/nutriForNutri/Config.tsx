@@ -41,7 +41,6 @@ export function ConfigComponent() {
       const newData: Consult[] = [];
 
       r.data.hours.forEach((v) => {
-        console.log(v);
         const newInit = `${new Date(v.service_init).getHours().toString().padStart(2, "0")}:${new Date(v.service_init).getMinutes().toString().padStart(2, "0")}`;
         const newFinal = `${new Date(v.service_final).getHours().toString().padStart(2, "0")}:${new Date(v.service_final).getMinutes().toString().padStart(2, "0")}`;
 
@@ -171,14 +170,12 @@ export function ConfigComponent() {
 
   async function updateValue(event: ChangeEvent<HTMLInputElement>) {
     const price = Number(event.currentTarget.value);
-    console.log(event.currentTarget.value);
 
     try {
       clearInterval(timeMoney);
     } catch (error) {}
 
     if (!Number.isNaN(price)) {
-      console.log(parseMoneyInput(price));
       setMyPrice(parseMoneyInput(price));
 
       setTimeMoney(

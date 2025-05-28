@@ -76,7 +76,6 @@ export default function HomeComponent() {
     const r = await followAPI();
 
     if (r.data?.simplePost) {
-      console.log(r.data.simplePost);
       setPosts(r.data.simplePost);
     }
 

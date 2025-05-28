@@ -47,7 +47,6 @@ export default function ModalSearch(props: Props) {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     socket.on(`${socket.id}getProfile${message}`, (data: searchProfileResponse[]) => {
-      console.log(data);
       setProfileResult(data);
       setSearch(false);
       socket.off(`${socket.id}getProfile${message}`);

@@ -1,4 +1,4 @@
- "use client"
+"use client";
 import { useEffect, useState } from "react";
 import { Logo } from "../login/styles";
 import { ContainerVerify, DivVerify, GifConfirm, VerifyText } from "./styled";
@@ -13,19 +13,19 @@ import { openModal } from "../MyCustomModal/page";
 import MySvg from "../MySvg/page";
 
 type Prop = {
-    text: string
-}
+  text: string;
+};
 
-export function AlertInModal(prop: Prop){
-
-
-    return (
-        <DivVerify> 
-            <CloseButton onClick={() => openModal(<></>)}>
-                <MySvg src="/icons/close.svg" />
-            </CloseButton>
-            <VerifyText>Enviamos um e-mail para confirmar seu login. Verifique sua caixa de entrada e siga as instruções. Não esqueça de conferir o spam! </VerifyText>
-            <GifConfirm src="/gif/check.gif"/> 
-        </DivVerify>            
-    )
+export function AlertInModal(prop: Prop) {
+  return (
+    <DivVerify>
+      <CloseButton onClick={() => openModal(<></>)}>
+        <MySvg src="/icons/close.svg" />
+      </CloseButton>
+      <VerifyText>
+        Enviamos um e-mail para confirmar seu login. Verifique sua caixa de entrada e siga as instruções. Não esqueça de conferir a caixa de spam!{" "}
+      </VerifyText>
+      <GifConfirm src="/gif/check.gif" />
+    </DivVerify>
+  );
 }

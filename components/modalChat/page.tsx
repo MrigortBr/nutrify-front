@@ -164,7 +164,6 @@ export default function ModalChat(props: Props) {
   }
 
   function iRecivedMessage() {
-    console.log(`${socket.id}${username}recivedMessage`);
     socket.on(`${socket.id}${username}recivedMessage`, (data: dataHistory[]) => {
       data.forEach((v) => {
         v.mymessage = false;
@@ -293,7 +292,6 @@ export default function ModalChat(props: Props) {
       SendMessage();
       setMessage("");
     } else if (event.key === "Backspace") {
-      console.log(chatContainerRef.current);
     } else {
       socket.emit(`OnChangeText`, { change: true, username: username });
       if (changeInput) clearTimeout(changeInput);

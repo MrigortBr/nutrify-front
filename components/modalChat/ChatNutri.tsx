@@ -143,7 +143,6 @@ export default function ChatNutriComponent(props: Props) {
       SendMessage();
       setMessage("");
     } else if (event.key === "Backspace") {
-      console.log(chatContainerRef.current);
     } else {
       socket.emit(`OnChangeText`, { change: true, username: username });
       if (changeInput) clearTimeout(changeInput);

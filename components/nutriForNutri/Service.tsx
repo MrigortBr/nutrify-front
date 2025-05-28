@@ -110,7 +110,6 @@ export function ServiceComponent() {
 
   async function openRevenuesUser(user: NutriOpen) {
     const id = user.user_id;
-    console.log(user);
     const r = await getRevenueUser(id, dateRevenue, user.id);
 
     if (r.success) {

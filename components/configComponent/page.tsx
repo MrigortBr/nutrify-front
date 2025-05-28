@@ -36,6 +36,7 @@ export default function ConfigComponent(props: Props) {
   const [changeItens, setChangeItens] = useState(false);
   const [newEmail, setNewEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [myPassword, setMyPassword] = useState("");
   const [whoSendMessage, setWhoSendMessage] = useState("");
   const [whoSeeMyPosts, setWhoSeeMyPosts] = useState("");
   const [whoSeeMyPlanning, setWhoSeeMyPlanning] = useState("");
@@ -106,6 +107,7 @@ export default function ConfigComponent(props: Props) {
       whoseemyplanning: whoSeeMyPlanning as PrivacyLevel,
       whoseemyposts: whoSeeMyPosts as PrivacyLevel,
       whosendmessage: whoSendMessage as PrivacyLevel,
+      mypassword: myPassword,
     };
     setLoad(true);
     const res = await updateConfigAPI(data);
@@ -185,6 +187,10 @@ export default function ConfigComponent(props: Props) {
                 placeholder="Digite sua nova senha"
                 type="text"
               ></ItemField>
+            </ConfigItem>
+            <ConfigItem>
+              <ItemLabel>Confirmar alterações:</ItemLabel>
+              <ItemField value={myPassword} onChange={(e) => setMyPassword(e.currentTarget.value)} placeholder="Digite sua senha atual" type="text"></ItemField>
             </ConfigItem>
           </ConfigGroup>
 

@@ -6,11 +6,9 @@ const svgCache: { [key: string]: string } = {};
 
 export default function MySvgNew(props: { src: string }) {
   const [svgContent, setSvgContent] = useState<string | null>(null);
-  console.log("fazendo feetch");
 
   useEffect(() => {
     // Verificar se o SVG já está no cache
-    console.log("fazendo feetchAQ");
 
     if (svgCache[props.src]) {
       setSvgContent(svgCache[props.src]);

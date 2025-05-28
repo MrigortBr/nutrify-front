@@ -69,6 +69,7 @@ export type configPrivacy = {
 export type configUpdate = configPrivacy & {
   email: string;
   password: string;
+  mypassword: string;
 };
 
 export enum PrivacyLevel {

@@ -210,6 +210,7 @@ export default function PlanItemComponent(prop: {
 
     setter(value); // Atualiza o estado com o valor formatado
   };
+
   return (
     <PlanItemContainer>
       <PlanItem

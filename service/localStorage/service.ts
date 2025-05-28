@@ -29,10 +29,6 @@ export async function getUserBySimpleProfile(): Promise<SimpleProfile> {
       simpleProfile = JSON.parse(simpleS);
       simpleProfile.typeUser = typeUser as TypeUser;
 
-      console.log(simpleProfile);
-
-      console.log(isSimpleProfile(simpleProfile));
-
       if (isSimpleProfile(simpleProfile)) {
         resolve(simpleProfile);
         return;

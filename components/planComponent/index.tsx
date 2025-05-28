@@ -41,7 +41,7 @@ const pNew: planFood = {
   recipe: "",
   picture: "",
   marked: false,
-  kcal: "0"
+  kcal: "0",
 };
 
 export function PlanComponent(props: props) {

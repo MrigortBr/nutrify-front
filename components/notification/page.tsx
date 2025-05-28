@@ -11,6 +11,8 @@ import {
 } from "./styled";
 import { socket } from "../menu/page";
 import SimpleRevenue from "../NutriConfigComponents/SimpleRevenue";
+import { Routes } from "@/enum/Routes";
+import { useRouter } from "next/navigation";
 
 type Notification = {
   id: number;
@@ -29,6 +31,7 @@ type Props = {
 
 export default function ModalNotifications(props: Props) {
   const [notification, setNotification] = useState<Notification[]>([]);
+  const router = useRouter();
 
   function listenNotifications() {
     socket.off("sendNotification");
@@ -55,7 +58,17 @@ export default function ModalNotifications(props: Props) {
       </NotificationHeader>
       <NotificationItemsContainer>
         {notification.map((v, i) => (
-          <NotificationItem $read={v.read} key={i}>
+          <NotificationItem
+            $read={v.read}
+            key={i}
+            onClick={() => {
+              if (v.type == "profile") {
+                router.push(Routes.profile);
+              } else if (v.type == "post") {
+                router.push(Routes.post + v.link.replace("/post?id=", ""));
+              }
+            }}
+          >
             <NotificationItemTitle>{v.message}</NotificationItemTitle>
           </NotificationItem>
         ))}

@@ -84,7 +84,6 @@ export default function Index() {
   function listenNotification() {
     socket.off(`${username}notification`);
     socket.on(`${username}notification`, (data: { message: string }) => {
-      console.log(data);
       showAlert(data.message, "info");
     });
   }
