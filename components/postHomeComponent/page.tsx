@@ -131,12 +131,12 @@ export default function PostHomeComponent(prop: Props) {
     <PostContainer key={prop.index}>
       <PostHeader onClick={() => router.push(Routes.profile + `?u=${prop.post.username}`)}>
         <PostPictureSpan>
-          <PostPictureUser src={prop.post.pictureUser || "/png/remo.jpg"} />
+          <PostPictureUser src={prop.post.pictureUser || "/png/logo.jpg"} />
         </PostPictureSpan>
         <PostUsername>@{prop.post.username}</PostUsername>
       </PostHeader>
       <PostPictureImgSpan>
-        <PostPictureImg src={prop.post.picture || "/png/remo.jpg"}></PostPictureImg>
+        <PostPictureImg src={prop.post.picture || "/png/logo.jpg"}></PostPictureImg>
       </PostPictureImgSpan>
       <PostActions>
         <PostFunctionItemHome style={{ marginRight: "3vw" }}>

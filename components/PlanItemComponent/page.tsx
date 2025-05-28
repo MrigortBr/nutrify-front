@@ -103,7 +103,7 @@ export default function PlanItemComponent(prop: {
       name: newName,
       nameType: nameType,
       recipe: recipe,
-      kcal: kcal
+      kcal: kcal,
     };
 
     const r = await insertPlanAPI(data);
@@ -137,7 +137,7 @@ export default function PlanItemComponent(prop: {
       name: newName,
       nameType: nameType,
       recipe: recipe,
-      kcal: kcal
+      kcal: kcal,
     };
 
     const r = await updateAPI(data);
@@ -220,7 +220,6 @@ export default function PlanItemComponent(prop: {
             } else {
               if (!prop.isMyProfile) return;
 
-              
               setLoadMarked(true);
               if (!marked) showAlert("Marcação feita: refeição realizada", "info");
               if (marked) showAlert("Marcação feita: refeição não realizada", "info");
@@ -243,7 +242,7 @@ export default function PlanItemComponent(prop: {
             {picture == "" ? <p style={{ width: "100%", textAlign: "center" }}>Clique na foto para adicionar</p> : <></>}
           </span>
         ) : (
-          <PlanItemImg src={prop.plan.picture != "" ? prop.plan.picture : "/png/remo.jpeg"} />
+          <PlanItemImg src={prop.plan.picture != "" ? prop.plan.picture : "/png/logo.jpeg"} />
         )}
         {isNew ? (
           <PlanItemTitleInput placeholder="Nome do prato" value={newName} onChange={(e) => setNewName(e.currentTarget.value)} />
@@ -274,14 +273,13 @@ export default function PlanItemComponent(prop: {
           <PlanItemDescription>
             Horario: {formatHourMinute(prop.plan.dateInit)} - {formatHourMinute(prop.plan.dateFinal)}
           </PlanItemDescription>
-          
         )}
 
-        {!isNew ?           <PlanItemDescription>
-            Calorias: {prop.plan.kcal} kcal
-          </PlanItemDescription> :
+        {!isNew ? (
+          <PlanItemDescription>Calorias: {prop.plan.kcal} kcal</PlanItemDescription>
+        ) : (
           <PlanItemTitleInput type="number" placeholder="Calorias" value={kcal} onChange={(e) => setKcal(e.currentTarget.value)} />
-}
+        )}
 
         <PlanButton
           onClick={() => {

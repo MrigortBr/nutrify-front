@@ -325,7 +325,7 @@ export default function ComponentPost(props: Props) {
           </NewPostPreview>
           <NewPostInfoContainer>
             <NewPostInfoUserSpan>
-              <NewPostInfoPictureUser src={simpleProfile?.picture ?? "/png/remo.jpg"} />
+              <NewPostInfoPictureUser src={simpleProfile?.picture ?? "/png/logo.jpg"} />
               <NewPostInfoUsername>@{simpleProfile?.username}</NewPostInfoUsername>
             </NewPostInfoUserSpan>
             <NewPostInfoCaption placeholder="Escolha a melhor legenda para sua publicação" value={caption} onChange={captionSet}></NewPostInfoCaption>
@@ -375,7 +375,7 @@ export default function ComponentPost(props: Props) {
               </NewPostPreview>
               <NewPostInfoContainer>
                 <NewPostInfoUserSpan>
-                  <NewPostInfoPictureUser src={simpleProfile?.picture ?? "/png/remo.jpg"} />
+                  <NewPostInfoPictureUser src={simpleProfile?.picture ?? "/png/logo.jpg"} />
                   <NewPostInfoUsername>@{simpleProfile?.username}</NewPostInfoUsername>
                 </NewPostInfoUserSpan>
                 <NewPostInfoCaption

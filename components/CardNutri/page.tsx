@@ -23,7 +23,7 @@ export default function CardNutri(prop: Prop) {
     const hour: HoursObject | undefined = hours.find((v) => v.id == selected);
 
     if (hour) {
-      const data = await setForHour(nutri.nutri_id, hour.id, (price.replace("R$", "").replace(",", ".")));
+      const data = await setForHour(nutri.nutri_id, hour.id, price.replace("R$", "").replace(",", "."));
 
       showAlert(data.data?.message ?? "", data.success ? "success" : "error");
 
@@ -55,7 +55,7 @@ export default function CardNutri(prop: Prop) {
   return (
     <CardContainer>
       <NutriInfo>
-        <NutriInfoImage src={nutri.picture ?? "/png/remo.jpg"} alt="" />
+        <NutriInfoImage src={nutri.picture ?? "/png/logo.jpg"} alt="" />
         <h1>{nutri.name}</h1>
         <h2>Preço por hora: {formatCurrency(nutri.price)}</h2>
         <span>

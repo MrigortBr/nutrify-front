@@ -153,7 +153,7 @@ export default function PostComponent() {
                     {marked.map((v, i) => (
                       <p key={i} onClick={() => router.push(Routes.profile + `?u=${v.username}`)}>
                         {simpleProfile?.username == v.username ? "Você" : v.username}
-                        <ImageMarked src={v.picture ?? "/png/remo.jpg"} alt={v.username} key={`marked${v.username}${i}`} />
+                        <ImageMarked src={v.picture ?? "/png/logo.jpg"} alt={v.username} key={`marked${v.username}${i}`} />
                       </p>
                     ))}
                   </>
@@ -186,14 +186,14 @@ export default function PostComponent() {
           </PostPictureContainer>
           <PostHeader>
             <PostPictureSpan>
-              <PostPictureUser src={userImage || "/png/remo.jpg"} />
+              <PostPictureUser src={userImage || "/png/logo.jpg"} />
             </PostPictureSpan>
             <PostUsername>{username}</PostUsername>
           </PostHeader>
           <PostComments>
             {comments.map((v, index) => (
               <PostComment key={index} onClick={() => router.push(Routes.profile + `?u=${v.username}`)}>
-                <img src={v.pictureUser || "/png/remo.jpg"} alt="" />
+                <img src={v.pictureUser || "/png/logo.jpg"} alt="" />
                 <b>{v.username}</b> {v.comment}
               </PostComment>
             ))}

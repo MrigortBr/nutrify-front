@@ -84,7 +84,7 @@ export default function ModalSearch(props: Props) {
                 {profileResult.map((v, i) => (
                   <Profile key={i} onClick={() => openProfile(v.username)}>
                     <ProfilePictureSpan>
-                      <ProfilePicture src={v.picture ?? "/png/remo.jpg"} />
+                      <ProfilePicture src={v.picture ?? "/png/logo.jpg"} />
                     </ProfilePictureSpan>
                     <ProfileInfo>
                       <h1>{v.username}</h1>

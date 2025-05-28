@@ -53,7 +53,7 @@ export default function ServiceComponent() {
           <ServiceTable>
             {open.map((v, i) => (
               <ServiceTableItem key={i}>
-                <ItemImg src={v.picture ?? "/png/remo.jpg"} />
+                <ItemImg src={v.picture ?? "/png/logo.jpg"} />
                 <ItemName>{v.name}</ItemName>
                 <ItemHour>
                   Horario marcado: {new Date(v.service_init).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })} -{" "}
@@ -67,7 +67,7 @@ export default function ServiceComponent() {
           <ServiceTable>
             {last.map((v, i) => (
               <ServiceTableItem key={i}>
-                <ItemImg src={v.picture ?? "/png/remo.jpg"} />
+                <ItemImg src={v.picture ?? "/png/logo.jpg"} />
                 <ItemName>{v.name}</ItemName>
                 <ItemNameStar>
                   Realizada em:{" "}
@@ -83,7 +83,9 @@ export default function ServiceComponent() {
                 <ItemButton
                   onClick={() =>
                     openModal(
-                      <CardNutri value={{ name: v.name, number_service: 0, nutri_id: Number(v.nutri_id), picture: v.picture, price: v.price, rating: v.rating }} />
+                      <CardNutri
+                        value={{ name: v.name, number_service: 0, nutri_id: Number(v.nutri_id), picture: v.picture, price: v.price, rating: v.rating }}
+                      />
                     )
                   }
                 >

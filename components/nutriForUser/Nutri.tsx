@@ -80,7 +80,7 @@ export default function NutriComponent() {
                     <BestNutri>
             {bestNutri[2] ? (
               <ThreeNutri onClick={() => openModal(<CardNutri value={bestNutri[2]} />)}>
-                <BestNutriPicture src={bestNutri[2].picture ?? "/png/remo.jpg"} />
+                <BestNutriPicture src={bestNutri[2].picture ?? "/png/logo.jpg"} />
                 <BestNutriName>{bestNutri[2].name}</BestNutriName>
                 <BestNutriStars>
                   <span>
@@ -94,7 +94,7 @@ export default function NutriComponent() {
             )}
             {bestNutri[0] ? (
               <OneNutri onClick={() => openModal(<CardNutri value={bestNutri[0]} />)}>
-                <BestNutriPicture src={bestNutri[0].picture ?? "/png/remo.jpg"} />
+                <BestNutriPicture src={bestNutri[0].picture ?? "/png/logo.jpg"} />
                 <BestNutriName>{bestNutri[0].name}</BestNutriName>
                 <BestNutriStars>
                   <span>
@@ -108,7 +108,7 @@ export default function NutriComponent() {
             )}
             {bestNutri[1] ? (
               <TwoNutri onClick={() => openModal(<CardNutri value={bestNutri[1]} />)}>
-                <BestNutriPicture src={bestNutri[1].picture ?? "/png/remo.jpg"} />
+                <BestNutriPicture src={bestNutri[1].picture ?? "/png/logo.jpg"} />
                 <BestNutriName>{bestNutri[1].name}</BestNutriName>
                 <BestNutriStars>
                   <span>
@@ -155,7 +155,7 @@ export default function NutriComponent() {
 
             {nutri.map((v, i) => (
               <NutriExplore key={i}>
-                <NutriExplorePicture src={v.picture ?? "/png/remo.jpg"} />
+                <NutriExplorePicture src={v.picture ?? "/png/logo.jpg"} />
                 <NutriExploreName>{v.name}</NutriExploreName>
                 <NutriInfo>
                   <p>Atendimentos: {v.number_service}</p>

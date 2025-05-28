@@ -316,7 +316,7 @@ export default function ProfileComponent() {
               <UploadContainer onClick={() => inputRef.current?.click()} style={{ display: editProfile ? "" : "none" }}>
                 <MySvg src="/icons/upload.svg" />
               </UploadContainer>
-              {editProfile ? <UserPicture src={img ?? "/png/remo.jpg"} /> : <UserPicture src={img ?? "/png/remo.jpg"} />}
+              {editProfile ? <UserPicture src={img ?? "/png/logo.jpg"} /> : <UserPicture src={img ?? "/png/logo.jpg"} />}
             </UserPictureContainer>
             <FirstLine>
               {editProfile ? (

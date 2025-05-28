@@ -178,7 +178,7 @@ export default function ModalChat(props: Props) {
       const index = data.findIndex((v) => v.user.username == "Nutrify");
 
       if (index == -1) {
-        setChatUsers([{ user: { picture: "/png/remo.jpg", username: "Nutrify" }, message: "", noRead: 0, created_at: "" }, ...data]);
+        setChatUsers([{ user: { picture: "/png/logo.jpg", username: "Nutrify" }, message: "", noRead: 0, created_at: "" }, ...data]);
       } else {
         setChatUsers(data);
       }
@@ -279,7 +279,7 @@ export default function ModalChat(props: Props) {
       setLoadChat(true);
       setUsername(newUsername);
       setOnChange(newUsername);
-      setPicture(picture == null ? "/png/remo.jpg" : picture);
+      setPicture(picture == null ? "/png/logo.jpg" : picture);
       setChatSelected(true);
       if (noread > 0) {
         loadMessagesThisChat(newUsername);
@@ -352,7 +352,7 @@ export default function ModalChat(props: Props) {
     setLoadChat(true);
     setUsername(newUsername);
     setOnChange(newUsername);
-    setPicture(picture == null ? "/png/remo.jpg" : picture);
+    setPicture(picture == null ? "/png/logo.jpg" : picture);
     setChatSelected(true);
     if (noread > 0) {
       loadMessagesThisChat(newUsername);
@@ -396,7 +396,7 @@ export default function ModalChat(props: Props) {
                       <>
                         <ChatImgContainer>
                           <ChatImgBackground>
-                            <ChatImg src={v.user.picture == null ? "/png/remo.jpg" : v.user.picture}></ChatImg>
+                            <ChatImg src={v.user.picture == null ? "/png/logo.jpg" : v.user.picture}></ChatImg>
                           </ChatImgBackground>
                         </ChatImgContainer>
                         <ChatName>
@@ -413,7 +413,7 @@ export default function ModalChat(props: Props) {
                       <>
                         <ChatImgContainer>
                           <ChatImgBackground>
-                            <ChatImg src={v.user.picture == null ? "/png/remo.jpg" : v.user.picture}></ChatImg>
+                            <ChatImg src={v.user.picture == null ? "/png/logo.jpg" : v.user.picture}></ChatImg>
                           </ChatImgBackground>
                         </ChatImgContainer>
                         <ChatName>
@@ -440,7 +440,7 @@ export default function ModalChat(props: Props) {
                   >
                     <ChatImgContainer>
                       <ChatImgBackground>
-                        <ChatImg src={v.picture == null ? "/png/remo.jpg" : v.picture}></ChatImg>
+                        <ChatImg src={v.picture == null ? "/png/logo.jpg" : v.picture}></ChatImg>
                       </ChatImgBackground>
                     </ChatImgContainer>
                     <ChatName>{v.name}</ChatName>
@@ -464,7 +464,7 @@ export default function ModalChat(props: Props) {
                   >
                     <ChatImgContainer>
                       <ChatImgBackground>
-                        <ChatImg src={v.picture == null ? "/png/remo.jpg" : v.picture}></ChatImg>
+                        <ChatImg src={v.picture == null ? "/png/logo.jpg" : v.picture}></ChatImg>
                       </ChatImgBackground>
                     </ChatImgContainer>
                     <ChatName>{v.name}</ChatName>
@@ -487,7 +487,7 @@ export default function ModalChat(props: Props) {
                       {username == "nutrify" ? (
                         <ChatMessagesHeader>
                           <ChatMessagesImg>
-                            <ChatImg src={picture ?? "/png/remo.jpg"}></ChatImg>
+                            <ChatImg src={picture ?? "/png/logo.jpg"}></ChatImg>
                           </ChatMessagesImg>
                           <ChatMessagesName>
                             <p className="nameUser"> {username}</p>
@@ -498,7 +498,7 @@ export default function ModalChat(props: Props) {
                       ) : (
                         <ChatMessagesHeader>
                           <ChatMessagesImg>
-                            <ChatImg src={picture ?? "/png/remo.jpg"}></ChatImg>
+                            <ChatImg src={picture ?? "/png/logo.jpg"}></ChatImg>
                           </ChatMessagesImg>
                           <ChatMessagesName>
                             <p className="nameUser"> {username}</p>

@@ -144,7 +144,7 @@ export function ServiceComponent() {
         <UsersService>
           {open.map((v, i) => (
             <User key={i + "open"} onClick={() => openRevenuesUser(v)}>
-              <UserImg src={v.picture ?? "/png/remo.jpg"} />
+              <UserImg src={v.picture ?? "/png/logo.jpg"} />
               <UserTitle>{v.name}</UserTitle>
               <UserHour>
                 Horario: {new Date(v.service_init).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })} -{" "}
@@ -155,7 +155,7 @@ export function ServiceComponent() {
 
           {last.map((v, i) => (
             <User key={i + "last"} onClick={() => openRevenuesUser(v)}>
-              <UserImg src={v.picture ?? "/png/remo.jpg"} />
+              <UserImg src={v.picture ?? "/png/logo.jpg"} />
               <UserTitle>{v.name}</UserTitle>
               <UserHour>Finalizado em: {new Date(v.service_final).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}</UserHour>
             </User>

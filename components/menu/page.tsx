@@ -128,7 +128,7 @@ export default function Index() {
         <>
           <UserInfo onClick={() => router.push(Routes.profile)}>
             <UserPictureContainer>
-              <UserPicture src={picture ?? "/png/remo.jpg"} />
+              <UserPicture src={picture ?? "/png/logo.jpg"} />
             </UserPictureContainer>
             <UserName>{name}</UserName>
             <UserSign>@{username}</UserSign>

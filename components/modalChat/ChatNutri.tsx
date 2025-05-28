@@ -291,7 +291,7 @@ export default function ChatNutriComponent(props: Props) {
 
       <ChatMessagesHeader>
         <ChatMessagesImg>
-          <ChatImg src={picture ?? "/png/remo.jpg"}></ChatImg>
+          <ChatImg src={picture ?? "/png/logo.jpg"}></ChatImg>
         </ChatMessagesImg>
         <ChatMessagesName>
           <p className="nameUser"> {name}</p>
